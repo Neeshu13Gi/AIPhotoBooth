@@ -1,0 +1,1581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <title>FRAME AI - Holobox PhotoBooth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #1D4ED8;
+      --primary-hover: #1E40AF;
+      --primary-gradient: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 35%, #2563EB 70%, #3B82F6 100%);
+      --wavy-gradient: linear-gradient(-45deg, #1E40AF, #2563EB, #3B82F6, #1D4ED8, #4F46E5);
+      --surface: #FFFFFF;
+      --bg-kiosk: #FFFFFF;
+      --text-heading: #0F172A;
+      --text-body: #334155;
+      --text-muted: #64748B;
+      --border-color: #E2E8F0;
+      --border-active: #2563EB;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+
+    html, body {
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      background: #FFFFFF;
+      color: var(--text-heading);
+      overflow-x: hidden;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: stretch;
+      background: #FFFFFF;
+    }
+
+    /* Kiosk Container - Locked 1080x1920 portrait kiosk canvas */
+    .kiosk-container {
+      width: 100vw;
+      max-width: 1080px;
+      height: 100vh;
+      height: 100dvh;
+      background: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* =========================================================================
+       DYNAMIC WAVY ANIMATED HEADER
+       ========================================================================= */
+    .header-bar {
+      width: 100%;
+      background: var(--wavy-gradient);
+      background-size: 300% 300%;
+      animation: waveHeaderShift 8s ease infinite;
+      color: #FFFFFF;
+      padding: clamp(18px, 2.4vh, 36px) clamp(22px, 4vw, 50px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom-left-radius: clamp(24px, 3.5vw, 42px);
+      border-bottom-right-radius: clamp(24px, 3.5vw, 42px);
+      box-shadow: 0 10px 30px rgba(29, 78, 216, 0.28);
+      flex-shrink: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle wavy glow light ray in header */
+    .header-bar::after {
+      content: '';
+      position: absolute;
+      top: -50%; left: -50%; width: 200%; height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
+      animation: waveRayPulse 6s ease-in-out infinite alternate;
+      pointer-events: none;
+    }
+
+    @keyframes waveHeaderShift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes waveRayPulse {
+      0% { transform: scale(0.9) rotate(0deg); opacity: 0.5; }
+      100% { transform: scale(1.1) rotate(15deg); opacity: 0.9; }
+    }
+
+    .header-brand-group {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      z-index: 2;
+    }
+
+    .header-logo-badge {
+      width: clamp(40px, 5vw, 56px);
+      height: clamp(40px, 5vw, 56px);
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: clamp(12px, 1.8vw, 18px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(20px, 2.8vw, 28px);
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .header-title-text h1 {
+      font-size: clamp(20px, 3.2vw, 32px);
+      font-weight: 900;
+      letter-spacing: 0.5px;
+      line-height: 1.1;
+      color: #FFFFFF;
+    }
+
+    .header-title-text p {
+      font-size: clamp(12px, 1.6vw, 17px);
+      font-weight: 600;
+      opacity: 0.88;
+      color: #DBEAFE;
+      margin-top: 2px;
+    }
+
+    .header-icon-badge {
+      width: clamp(40px, 5vw, 54px);
+      height: clamp(40px, 5vw, 54px);
+      background: rgba(255, 255, 255, 0.18);
+      backdrop-filter: blur(8px);
+      border: 1.5px solid rgba(255, 255, 255, 0.35);
+      border-radius: clamp(12px, 1.8vw, 18px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(20px, 2.6vw, 28px);
+      z-index: 2;
+    }
+
+    /* Main Viewport Content - Full Width & Vertically Centered */
+    .viewport-content {
+      flex: 1;
+      padding: clamp(10px, 1.5vh, 20px) clamp(20px, 4.5vw, 54px) clamp(16px, 2vh, 28px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      background: #FFFFFF;
+      overflow-y: auto;
+      width: 100%;
+    }
+
+    .kiosk-screen {
+      width: 100%;
+      max-width: 900px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      margin: 0 auto;
+      animation: screenFadeIn 0.22s ease-out;
+    }
+
+    .kiosk-screen.active {
+      display: flex;
+    }
+
+    @keyframes screenFadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Top Step Pill Badge */
+    .step-pill-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: clamp(6px, 1vh, 10px) clamp(14px, 2vw, 22px);
+      background: #EFF6FF;
+      color: var(--primary);
+      border-radius: 999px;
+      font-size: clamp(12px, 1.5vw, 16px);
+      font-weight: 800;
+      letter-spacing: 0.8px;
+      text-transform: uppercase;
+      margin-bottom: clamp(10px, 1.5vh, 18px);
+    }
+
+    .step-pill-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--primary);
+      box-shadow: 0 0 8px rgba(29, 78, 216, 0.6);
+    }
+
+    /* Prominent Heading */
+    .heading-box {
+      text-align: center;
+      margin-bottom: clamp(12px, 1.8vh, 24px);
+      width: 100%;
+    }
+
+    .heading-box h1 {
+      font-size: clamp(26px, 4vw, 44px);
+      font-weight: 900;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+      line-height: 1.2;
+    }
+
+    .heading-box h1 .highlight {
+      color: var(--primary);
+    }
+
+    .heading-box p {
+      font-size: clamp(14px, 2vw, 22px);
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    /* 4-Step Progress Indicator Dots */
+    .step-dots-row {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: clamp(8px, 1.2vh, 16px);
+    }
+
+    .step-dot {
+      width: 10px;
+      height: 8px;
+      border-radius: 4px;
+      background: #E2E8F0;
+      transition: all 0.3s;
+    }
+
+    .step-dot.active-bar {
+      width: 36px;
+      background: var(--primary);
+      box-shadow: 0 2px 8px rgba(29, 78, 216, 0.4);
+    }
+
+    /* Collection Title Banner */
+    .collection-title-bar {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-bottom: clamp(12px, 1.8vh, 20px);
+    }
+
+    .collection-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: clamp(15px, 2vw, 22px);
+      font-weight: 800;
+      color: var(--text-heading);
+    }
+
+    .collection-subtitle {
+      font-size: clamp(12px, 1.5vw, 17px);
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    /* =========================================================================
+       STEP 1: 2x2 FRAMES GRID WITH IN-CARD ARROW BUTTON
+       ========================================================================= */
+    .frames-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: clamp(14px, 2.2vw, 28px);
+      width: 100%;
+      margin-bottom: clamp(14px, 2vh, 24px);
+    }
+
+    .frame-card {
+      border: clamp(2.5px, 0.4vw, 4px) solid var(--border-color);
+      border-radius: clamp(18px, 2.5vw, 30px);
+      padding: clamp(10px, 1.4vw, 18px);
+      cursor: pointer;
+      position: relative;
+      background: #FFFFFF;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+    }
+
+    .frame-card:hover {
+      border-color: #93C5FD;
+      transform: translateY(-3px);
+      box-shadow: 0 10px 26px rgba(29, 78, 216, 0.14);
+    }
+
+    .frame-card.active-selected {
+      border-color: var(--border-active);
+      background: #EFF6FF;
+      box-shadow: 0 10px 30px rgba(29, 78, 216, 0.25);
+    }
+
+    /* Selected Pill Badge inside Card */
+    .frame-selected-pill {
+      position: absolute;
+      top: clamp(14px, 2vw, 24px);
+      right: clamp(14px, 2vw, 24px);
+      background: var(--primary);
+      color: #FFFFFF;
+      padding: clamp(4px, 0.6vh, 8px) clamp(10px, 1.5vw, 18px);
+      border-radius: 999px;
+      font-size: clamp(11px, 1.4vw, 16px);
+      font-weight: 800;
+      display: none;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.4);
+      z-index: 10;
+    }
+
+    .frame-card.active-selected .frame-selected-pill {
+      display: inline-flex;
+    }
+
+    .frame-img-container {
+      width: 100%;
+      aspect-ratio: 9 / 13;
+      max-height: clamp(170px, 26vh, 380px);
+      border-radius: clamp(12px, 1.8vw, 20px);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #FAF8F5;
+      position: relative;
+    }
+
+    .frame-img-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Bottom Info Row with Title & Arrow Circle */
+    .frame-card-bottom-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: clamp(10px, 1.4vh, 18px);
+      gap: 8px;
+    }
+
+    .frame-text-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      overflow: hidden;
+    }
+
+    .frame-name-h3 {
+      font-size: clamp(13px, 1.8vw, 22px);
+      font-weight: 800;
+      color: var(--text-heading);
+      line-height: 1.25;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
+    }
+
+    .frame-category-tag {
+      font-size: clamp(11px, 1.4vw, 17px);
+      font-weight: 700;
+      color: var(--primary);
+      margin-top: 2px;
+    }
+
+    /* Round Arrow Action Button in each Frame Card */
+    .frame-card-arrow-btn {
+      width: clamp(34px, 4.4vw, 50px);
+      height: clamp(34px, 4.4vw, 50px);
+      border-radius: 50%;
+      background: #EFF6FF;
+      border: 1.5px solid #BFDBFE;
+      color: var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(16px, 2.2vw, 24px);
+      font-weight: 900;
+      flex-shrink: 0;
+      transition: all 0.2s;
+      box-shadow: 0 2px 8px rgba(29, 78, 216, 0.12);
+    }
+
+    .frame-card:hover .frame-card-arrow-btn,
+    .frame-card.active-selected .frame-card-arrow-btn {
+      background: var(--primary);
+      color: #FFFFFF;
+      border-color: var(--primary);
+      transform: scale(1.08);
+      box-shadow: 0 4px 12px rgba(29, 78, 216, 0.35);
+    }
+
+    /* Auto-saved info banner */
+    .auto-save-banner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: clamp(12px, 1.5vw, 17px);
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-top: clamp(8px, 1.2vh, 16px);
+    }
+
+    /* =========================================================================
+       STEP 2: CAPTURE & UPLOAD (With Wavy Animated Glow Aura!)
+       ========================================================================= */
+    .camera-box-viewport {
+      width: 100%;
+      max-width: clamp(340px, 60vw, 680px);
+      aspect-ratio: 9 / 12;
+      max-height: clamp(300px, 42vh, 640px);
+      border-radius: clamp(22px, 3vw, 40px);
+      overflow: hidden;
+      background: #F8FAFC;
+      border: clamp(3px, 0.4vw, 5px) solid transparent;
+      background-clip: padding-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: clamp(24px, 3.5vh, 44px) auto clamp(16px, 2.4vh, 28px);
+      position: relative;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+    }
+
+    .step-icon-badge {
+      width: clamp(56px, 7vw, 84px);
+      height: clamp(56px, 7vw, 84px);
+      background: #EFF6FF;
+      border: 2px solid #BFDBFE;
+      border-radius: clamp(16px, 2vw, 24px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(28px, 3.5vw, 42px);
+      margin-bottom: clamp(14px, 2vh, 24px);
+      box-shadow: 0 4px 15px rgba(37, 99, 235, 0.12);
+    }
+
+    /* Dynamic animated wavy glow border around camera */
+    .camera-box-viewport::before {
+      content: '';
+      position: absolute;
+      top: -4px; left: -4px; right: -4px; bottom: -4px;
+      background: var(--wavy-gradient);
+      background-size: 300% 300%;
+      animation: waveHeaderShift 6s ease infinite;
+      border-radius: clamp(24px, 3.2vw, 42px);
+      z-index: -1;
+    }
+
+    .camera-box-viewport img,
+    .camera-box-viewport video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+    }
+
+    .countdown-number {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: clamp(72px, 11vw, 130px);
+      font-weight: 900;
+      color: #FFFFFF;
+      text-shadow: 0 0 35px rgba(0,0,0,0.9);
+      display: none;
+      z-index: 15;
+    }
+
+    .flash-layer {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: white;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.1s;
+      z-index: 25;
+    }
+
+    .capture-button-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: clamp(12px, 1.8vh, 22px);
+      width: 100%;
+      max-width: clamp(340px, 60vw, 680px);
+      margin: 0 auto;
+    }
+
+    .shutter-circle-btn {
+      width: clamp(76px, 9vw, 110px);
+      height: clamp(76px, 9vw, 110px);
+      border-radius: 50%;
+      background: var(--wavy-gradient);
+      background-size: 200% 200%;
+      animation: waveHeaderShift 4s ease infinite;
+      color: #FFFFFF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(32px, 4.2vw, 50px);
+      border: clamp(4px, 0.6vw, 7px) solid #EFF6FF;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(29, 78, 216, 0.45);
+      transition: all 0.2s;
+    }
+
+    .shutter-circle-btn:hover {
+      transform: scale(1.08);
+    }
+
+    .or-label {
+      font-size: clamp(13px, 1.6vw, 18px);
+      font-weight: 800;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+
+    .gallery-btn {
+      width: 100%;
+      padding: clamp(16px, 2.2vh, 26px);
+      border: 2.5px solid var(--primary);
+      color: var(--primary);
+      border-radius: clamp(14px, 2vw, 24px);
+      background: #EFF6FF;
+      font-size: clamp(16px, 2.2vw, 24px);
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .gallery-btn:hover {
+      background: #DBEAFE;
+    }
+
+    .live-camera-snap-group {
+      display: none;
+      gap: 16px;
+      width: 100%;
+      max-width: clamp(340px, 60vw, 680px);
+      margin: 0 auto;
+    }
+
+    /* =========================================================================
+       STEP 3: USER DETAILS FORM
+       ========================================================================= */
+    .form-wrapper {
+      width: 100%;
+      max-width: clamp(360px, 65vw, 760px);
+      margin: 0 auto;
+    }
+
+    .form-row {
+      margin-bottom: clamp(14px, 2vh, 24px);
+    }
+
+    .form-row label {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: clamp(15px, 2vw, 24px);
+      font-weight: 800;
+      color: var(--text-heading);
+      margin-bottom: 6px;
+    }
+
+    .form-input-field {
+      width: 100%;
+      padding: clamp(16px, 2.2vh, 24px) clamp(18px, 2.4vw, 28px);
+      border: 2.5px solid #CBD5E1;
+      border-radius: clamp(12px, 1.8vw, 20px);
+      font-size: clamp(16px, 2.2vw, 24px);
+      outline: none;
+      color: #0F172A;
+      background: #FFFFFF;
+      transition: border-color 0.2s;
+      font-weight: 600;
+    }
+
+    .form-input-field:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    }
+
+    .secure-badge {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-size: clamp(12px, 1.5vw, 18px);
+      color: var(--text-muted);
+      font-weight: 700;
+      margin-top: clamp(14px, 2vh, 24px);
+    }
+
+    /* =========================================================================
+       STEP 4: CREATING VIDEO PROGRESS
+       ========================================================================= */
+    .progress-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: clamp(16px, 3vh, 40px) 10px;
+      text-align: center;
+      width: 100%;
+    }
+
+    .spinner-ring {
+      width: clamp(140px, 18vw, 220px);
+      height: clamp(140px, 18vw, 220px);
+      border-radius: 50%;
+      border: clamp(8px, 1vw, 14px) solid #EFF6FF;
+      border-top-color: var(--primary);
+      animation: spinRing 1.2s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: clamp(20px, 3vh, 36px);
+    }
+
+    @keyframes spinRing {
+      100% { transform: rotate(360deg); }
+    }
+
+    .spinner-icon {
+      font-size: clamp(48px, 6vw, 76px);
+      animation: counterSpinRing 1.2s linear infinite;
+    }
+
+    @keyframes counterSpinRing {
+      100% { transform: rotate(-360deg); }
+    }
+
+    .bar-track {
+      width: 100%;
+      max-width: clamp(340px, 55vw, 680px);
+      height: clamp(10px, 1.4vh, 18px);
+      background: #E2E8F0;
+      border-radius: 8px;
+      overflow: hidden;
+      margin: clamp(16px, 2.5vh, 28px) 0 clamp(8px, 1.2vh, 16px);
+    }
+
+    .bar-fill {
+      width: 15%;
+      height: 100%;
+      background: var(--wavy-gradient);
+      background-size: 200% 200%;
+      animation: waveHeaderShift 3s ease infinite;
+      transition: width 0.4s ease;
+    }
+
+    .pct-label {
+      font-size: clamp(24px, 3.2vw, 40px);
+      font-weight: 900;
+      color: var(--primary);
+      margin-bottom: clamp(20px, 3vh, 36px);
+    }
+
+    .magic-quote {
+      background: #EFF6FF;
+      border: 2px solid #BFDBFE;
+      color: #1E40AF;
+      padding: clamp(14px, 2vh, 24px) clamp(18px, 2.5vw, 32px);
+      border-radius: clamp(14px, 2vw, 24px);
+      font-size: clamp(14px, 1.8vw, 22px);
+      font-weight: 800;
+      max-width: clamp(360px, 55vw, 680px);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* =========================================================================
+       STEP 5: PREVIEW & QR CODE
+       ========================================================================= */
+    .result-box {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: clamp(360px, 60vw, 720px);
+      margin: 0 auto;
+    }
+
+    .video-framed-card {
+      width: 100%;
+      max-width: clamp(320px, 50vw, 600px);
+      aspect-ratio: 9 / 12;
+      max-height: clamp(280px, 38vh, 560px);
+      border-radius: clamp(20px, 2.8vw, 36px);
+      overflow: hidden;
+      background: #000;
+      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+      margin-bottom: clamp(14px, 2vh, 26px);
+    }
+
+    .video-framed-card video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .qr-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: clamp(16px, 2.2vh, 28px);
+      padding-top: clamp(14px, 2vh, 24px);
+      border-top: 2px solid var(--border-color);
+      width: 100%;
+    }
+
+    .qr-image {
+      width: clamp(130px, 16vw, 220px);
+      height: clamp(130px, 16vw, 220px);
+      border-radius: clamp(12px, 1.8vw, 20px);
+      border: 2px solid var(--border-color);
+    }
+
+    /* Primary & Secondary Action Buttons */
+    .btn-main-action {
+      width: 100%;
+      padding: clamp(18px, 2.5vh, 28px) clamp(22px, 3vw, 40px);
+      background: var(--wavy-gradient);
+      background-size: 200% 200%;
+      animation: waveHeaderShift 6s ease infinite;
+      color: #FFFFFF !important;
+      border: none;
+      border-radius: clamp(14px, 2vw, 24px);
+      font-size: clamp(18px, 2.5vw, 28px);
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      box-shadow: 0 8px 25px rgba(29, 78, 216, 0.35);
+      transition: all 0.2s;
+      margin: 0 auto;
+      text-decoration: none;
+    }
+
+    .btn-main-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(29, 78, 216, 0.45);
+    }
+
+    .btn-main-action:active {
+      transform: scale(0.98);
+    }
+
+    .btn-sub-action {
+      width: 100%;
+      padding: clamp(16px, 2.2vh, 24px) clamp(20px, 2.8vw, 36px);
+      background: #EFF6FF;
+      color: var(--primary) !important;
+      border: 2.5px solid #BFDBFE;
+      border-radius: clamp(14px, 2vw, 24px);
+      font-size: clamp(16px, 2.2vw, 24px);
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin: clamp(10px, 1.4vh, 18px) auto 0;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-sub-action:hover {
+      background: #DBEAFE;
+    }
+
+    /* Bottom Brand Bar with Wavy Mesh */
+    .footer-bar {
+      width: 100%;
+      background: var(--wavy-gradient);
+      background-size: 300% 300%;
+      animation: waveHeaderShift 8s ease infinite;
+      color: #FFFFFF;
+      padding: clamp(14px, 2vh, 22px) clamp(20px, 3vw, 36px);
+      text-align: center;
+      font-size: clamp(14px, 1.8vw, 20px);
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
+
+    #fileUploadHidden {
+      display: none;
+    }
+
+    /* =========================================================================
+       KIOSK OVERRIDE: Fixed readable sizes for 1080x1920 portrait kiosk display
+       (clamp() vw values come out too small at 1080px — these override directly)
+       ========================================================================= */
+    @media (min-width: 900px) {
+
+      /* Header */
+      .header-bar {
+        padding: 28px 52px;
+        border-bottom-left-radius: 40px;
+        border-bottom-right-radius: 40px;
+      }
+      .header-logo-badge {
+        width: 58px; height: 58px;
+        font-size: 28px;
+        border-radius: 18px;
+      }
+      .header-title-text h1 { font-size: 34px; }
+      .header-title-text p  { font-size: 17px; }
+      .header-icon-badge    { width: 54px; height: 54px; font-size: 28px; }
+
+      /* Step pill badge */
+      .step-pill-badge { font-size: 16px; padding: 10px 24px; margin-bottom: 16px; }
+      .step-pill-badge .dot { width: 10px; height: 10px; }
+
+      /* Headings */
+      .heading-box h1 { font-size: 48px; margin-bottom: 8px; }
+      .heading-box p  { font-size: 22px; }
+      .step-dots-row  { gap: 10px; margin-top: 16px; }
+      .step-dot       { width: 12px; height: 10px; border-radius: 5px; }
+      .step-dot.active-bar { width: 44px; }
+
+      /* Collection bar */
+      .collection-header   { font-size: 24px; gap: 10px; margin-bottom: 12px; }
+      .collection-subtitle { font-size: 17px; }
+
+      /* Frame cards */
+      .frames-grid { gap: 28px; margin-bottom: 28px; }
+      .frame-card  { border-radius: 28px; padding: 16px; }
+      .frame-img-container { border-radius: 20px; max-height: 380px; }
+      .frame-card-bottom-row { margin-top: 16px; gap: 10px; }
+      .frame-name-h3      { font-size: 22px; }
+      .frame-category-tag { font-size: 16px; }
+      .frame-selected-pill { font-size: 15px; padding: 7px 18px; top: 22px; right: 22px; }
+      .frame-card-arrow-btn { width: 50px; height: 50px; font-size: 24px; }
+
+      /* Auto-save banner */
+      .auto-save-banner { font-size: 17px; margin-top: 14px; }
+
+      /* Camera / capture */
+      .camera-box-viewport { max-width: 620px; max-height: 600px; border-radius: 38px; margin-top: 36px; margin-bottom: 28px; }
+      .camera-box-viewport::before { border-radius: 42px; }
+      .countdown-number     { font-size: 120px; }
+      .capture-button-group { gap: 20px; max-width: 620px; }
+      .shutter-circle-btn   { width: 104px; height: 104px; font-size: 48px; border-width: 6px; border-radius: 52px; }
+      .or-label             { font-size: 18px; letter-spacing: 2px; }
+      .gallery-btn          { font-size: 24px; padding: 24px; border-radius: 22px; gap: 14px; }
+      .live-camera-snap-group { gap: 18px; max-width: 620px; }
+
+      /* Form */
+      .form-wrapper { max-width: 720px; }
+      .form-row     { margin-bottom: 22px; }
+      .form-row label      { font-size: 22px; margin-bottom: 6px; gap: 10px; }
+      .form-input-field    { font-size: 22px; padding: 22px 26px; border-radius: 18px; }
+      .secure-badge        { font-size: 17px; margin-top: 22px; }
+
+      /* Progress */
+      .spinner-ring  { width: 200px; height: 200px; margin-bottom: 32px; }
+      .spinner-icon  { font-size: 72px; }
+      .bar-track     { max-width: 640px; height: 16px; margin: 26px 0 14px; }
+      .pct-label     { font-size: 38px; margin-bottom: 30px; }
+      .magic-quote   { font-size: 20px; padding: 22px 30px; border-radius: 22px; max-width: 640px; gap: 12px; }
+      #statusMessageText { font-size: 24px !important; }
+
+      /* Result */
+      .result-box       { max-width: 680px; }
+      .video-framed-card { max-width: 540px; max-height: 520px; border-radius: 34px; margin-bottom: 24px; }
+      .qr-container     { margin-top: 26px; padding-top: 22px; gap: 10px; }
+      .qr-image         { width: 200px; height: 200px; border-radius: 20px; }
+      .qr-container div { font-size: 20px; }
+
+      /* All main buttons */
+      .btn-main-action { font-size: 26px; padding: 26px 40px; border-radius: 22px; gap: 14px; }
+      .btn-sub-action  { font-size: 22px; padding: 22px 36px; border-radius: 22px; gap: 12px; margin-top: 16px; }
+
+      /* Footer */
+      .footer-bar { font-size: 19px; padding: 20px 36px; gap: 12px; }
+
+      /* Confirmed actions wrapper */
+      #confirmedActionsStep2 { max-width: 620px !important; margin-top: 24px !important; }
+      #step2ConfirmedActions  { max-width: 620px !important; margin-top: 24px !important; }
+
+      /* viewport padding */
+      .viewport-content { padding: 50px 50px 24px; }
+      .kiosk-screen { max-width: 960px; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="kiosk-container">
+
+    <!-- Top Wavy Ambient Gradient Header -->
+    <div class="header-bar">
+      <div class="header-brand-group">
+        <div class="header-logo-badge">✨</div>
+        <div class="header-title-text">
+          <h1>FRAME AI</h1>
+          <p>AI Memory Creator</p>
+        </div>
+      </div>
+      <div class="header-icon-badge">📸</div>
+    </div>
+
+    <!-- Main Viewport Content - Full Width & Vertically Centered -->
+    <div class="viewport-content">
+
+      <!-- ===================================================================
+           STEP 1: CHOOSE A FRAME (Direct In-Card Arrow Click Navigation)
+           =================================================================== -->
+      <div class="kiosk-screen active" id="viewStep1">
+        
+        <div class="step-pill-badge">
+          <span class="dot"></span>
+          <span>Step 01 · Frame Style</span>
+        </div>
+
+        <div class="heading-box">
+          <h1>Choose your <span class="highlight">Frame</span></h1>
+          <p>Select a visual style for your AI-generated memory video.</p>
+          <div class="step-dots-row">
+            <div class="step-dot active-bar"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+          </div>
+        </div>
+
+        <div class="collection-title-bar">
+          <div class="collection-header">
+            <span>🖼️</span>
+            <span>Frame Collection</span>
+          </div>
+          <div class="collection-subtitle">Choose the style that matches your story</div>
+        </div>
+
+        <div class="frames-grid" id="containerFramesGrid">
+          <!-- Populated dynamically via /api/frames -->
+        </div>
+
+        <!-- Continue button matching mockup — sits directly below frame grid -->
+        <button class="btn-main-action" id="btnStep1Continue" onclick="proceedFromStep1()" style="margin-top: 20px; margin-bottom: 8px;">
+          Continue →
+        </button>
+
+      </div>
+
+      <!-- ===================================================================
+           STEP 2: CAPTURE OR UPLOAD
+           =================================================================== -->
+      <div class="kiosk-screen" id="viewStep2">
+        
+        <div class="step-pill-badge">
+          <span class="dot"></span>
+          <span>Step 02 · Photo Capture</span>
+        </div>
+
+        <div class="heading-box">
+          <h1>Capture your <span class="highlight">Moment</span></h1>
+          <p>Take a live photo or upload from your gallery</p>
+          <div class="step-dots-row">
+            <div class="step-dot"></div>
+            <div class="step-dot active-bar"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+          </div>
+        </div>
+
+        <div class="camera-box-viewport" id="viewportCameraBox">
+          <div class="flash-layer" id="flashLayerEffect"></div>
+          <div class="countdown-number" id="countdownNumberText">3</div>
+          <video id="liveWebcamTag" autoplay playsinline muted></video>
+          <img id="portraitPhotoImg" alt="Guest Portrait Preview" />
+          <canvas id="canvasHidden" style="display: none;"></canvas>
+
+          <div id="promptPlaceholderBox" style="display: flex; flex-direction: column; align-items: center; gap: 14px; color: #64748B;">
+            <span style="font-size: clamp(56px, 8vw, 90px);">👤</span>
+            <span style="font-size: clamp(16px, 2.2vw, 24px); font-weight: 700; color: #1E293B;">Take photo or upload from gallery</span>
+          </div>
+        </div>
+
+        <!-- Initial Actions -->
+        <div class="capture-button-group" id="initialActionButtons">
+          <button class="shutter-circle-btn" onclick="startWebcamLive()" title="Open Live Camera">
+            📷
+          </button>
+          <div class="or-label">OR</div>
+          <button class="gallery-btn" onclick="document.getElementById('fileUploadHidden').click()">
+            <span>📤</span> Upload from Gallery
+          </button>
+        </div>
+
+        <!-- Live Camera Controls -->
+        <div class="live-camera-snap-group" id="controlsLiveCamera">
+          <button class="btn-main-action" style="flex: 2;" onclick="startSnapCountdown()">
+            📸 Snap (3s)
+          </button>
+          <button class="btn-sub-action" style="flex: 1; margin-top: 0;" onclick="cancelWebcamLive()">
+            Cancel
+          </button>
+        </div>
+
+        <input type="file" id="fileUploadHidden" accept="image/*" onchange="onFileSelected(event)" />
+
+        <div id="confirmedActionsStep2" style="display: none; width: 100%; max-width: clamp(340px, 60vw, 680px); margin: 18px auto 0;">
+          <button class="btn-main-action" onclick="switchStep(3)">
+            Continue to Details →
+          </button>
+          <button class="btn-sub-action" onclick="resetPhotoState()">
+            🔄 Retake / Change Photo
+          </button>
+        </div>
+      </div>
+
+      <!-- ===================================================================
+           STEP 3: USER DETAILS FORM
+           =================================================================== -->
+      <div class="kiosk-screen" id="viewStep3">
+        
+        <div class="step-pill-badge">
+          <span class="dot"></span>
+          <span>Step 03 · Guest Details</span>
+        </div>
+
+        <div class="heading-box">
+          <h1>Personalize your <span class="highlight">Video</span></h1>
+          <p>Please enter your details to generate your memory</p>
+          <div class="step-dots-row">
+            <div class="step-dot"></div>
+            <div class="step-dot"></div>
+            <div class="step-dot active-bar"></div>
+            <div class="step-dot"></div>
+          </div>
+        </div>
+
+        <form class="form-wrapper" id="formGuestDetails" onsubmit="submitKioskJob(event)">
+
+          <!-- Captured photo preview at top of form -->
+          <div id="step3PhotoPreview" style="display:none; align-items:center; gap:18px; background:#F0F7FF; border:2px solid #BFDBFE; border-radius:20px; padding:16px 20px; margin-bottom:22px;">
+            <img id="step3ThumbImg" style="width:80px; height:96px; object-fit:cover; border-radius:12px; border:2px solid #2563EB;" alt="Your photo" />
+            <div>
+              <div style="font-size:18px; font-weight:800; color:#1D4ED8;">📸 Your Photo</div>
+              <div style="font-size:15px; color:#475569; margin-top:4px;">Ready for AI video generation</div>
+              <button type="button" onclick="goBackToPhoto()" style="margin-top:8px; background:none; border:1.5px solid #93C5FD; border-radius:8px; color:#1D4ED8; font-size:14px; font-weight:700; padding:5px 14px; cursor:pointer;">✏️ Change Photo</button>
+            </div>
+          </div>
+          <div class="form-row">
+            <label><span>👤</span> Full Name</label>
+            <input type="text" class="form-input-field" id="fieldFullName" placeholder="Enter your full name" required />
+          </div>
+
+          <div class="form-row">
+            <label><span>✉️</span> Email Address</label>
+            <input type="email" class="form-input-field" id="fieldEmail" placeholder="Enter your email" required />
+          </div>
+
+          <div class="form-row">
+            <label><span>📞</span> Phone Number</label>
+            <input type="tel" class="form-input-field" id="fieldPhone" placeholder="Enter your phone number" required />
+          </div>
+
+          <div class="form-row">
+            <label><span>🗓️</span> Occasion (Optional)</label>
+            <input type="text" class="form-input-field" id="fieldOccasion" placeholder="e.g. Birthday, Anniversary" />
+          </div>
+
+          <div class="form-row">
+            <label><span>💬</span> Message (Optional)</label>
+            <input type="text" class="form-input-field" id="fieldMessage" placeholder="Write your message" />
+          </div>
+
+          <button type="submit" class="btn-main-action" style="margin-top: 18px;">
+            Generate Video ✨
+          </button>
+        </form>
+      </div>
+
+      <!-- ===================================================================
+           STEP 4: CREATING VIDEO PROGRESS (Slide 4 reference design)
+           =================================================================== -->
+      <div class="kiosk-screen" id="viewStep4">
+        
+        <div class="step-icon-badge">
+          🎬
+        </div>
+
+        <div class="heading-box" style="margin-bottom: 24px;">
+          <h1 style="margin-bottom: 6px;">Creating Your <span class="highlight">Video</span></h1>
+          <p style="font-size: clamp(16px, 2.2vw, 24px);">This may take a few moments</p>
+        </div>
+
+        <div class="progress-box">
+          <div class="spinner-ring">
+            <div class="spinner-icon">🎬</div>
+          </div>
+
+          <p id="statusMessageText" style="font-size: clamp(16px, 2.2vw, 24px); color: #334155; margin: 12px 0 20px; font-weight: 700; text-align: center;">
+            Please wait while we create your personalized Video...
+          </p>
+
+          <div class="bar-track">
+            <div class="bar-fill" id="fillProgressBar"></div>
+          </div>
+          <div class="pct-label" id="labelPercentage">75%</div>
+
+          <div class="magic-quote">
+            <span>✨</span>
+            <span>Great things take time, but magic is on the way! ✨</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ===================================================================
+           STEP 5: PREVIEW & QR CODE
+           =================================================================== -->
+      <div class="kiosk-screen" id="viewStep5">
+        
+        <div class="step-pill-badge">
+          <span class="dot"></span>
+          <span>Step 05 · Ready to Share</span>
+        </div>
+
+        <div class="heading-box">
+          <h1>Your Video is <span class="highlight">Ready!</span> 🎉</h1>
+          <p>Preview, download & share your beautiful memory</p>
+        </div>
+
+        <div class="result-box">
+          <div class="video-framed-card">
+            <video id="videoFramedOutput" controls autoplay loop playsinline></video>
+          </div>
+
+          <a id="btnDownloadVideo" class="btn-main-action" download>
+            <span>⬇️</span> Download Video
+          </a>
+
+          <a id="btnDownloadPhoto" class="btn-sub-action" download>
+            <span>🖼️</span> Download Image
+          </a>
+
+          <div class="qr-container">
+            <div style="font-size: clamp(16px, 2.2vw, 24px); font-weight: 800; color: #0F172A;">Scan to Download on Mobile</div>
+            <img id="imgQrCode" class="qr-image" alt="Scan QR Code" />
+            <div style="font-size: clamp(13px, 1.6vw, 18px); color: var(--text-muted); font-weight: 700;">Scan this QR code to download on your device</div>
+          </div>
+
+          <button class="btn-sub-action" style="margin-top: 18px;" onclick="resetKioskFlow()">
+            🔄 Create Another Video
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+
+  </div>
+
+  <!-- Client Application Logic -->
+  <script>
+    let chosenFrameId = null;
+    let photoBlob = null;
+    let photoBlobUrl = null;   // object URL kept for showing thumbnails
+    let webcamStream = null;
+    let pollingTimer = null;
+
+    const frameCategories = {
+      'frame-vintage-floral': 'Romance',
+      'frame-royal-gold': 'Elegance',
+      'frame-pink-rose': 'Charm',
+      'frame-midnight-gold': 'Luxury'
+    };
+
+    // ----------------------------------------------------------------
+    // 1. Fetch frames
+    // ----------------------------------------------------------------
+    async function loadFrames() {
+      try {
+        const res = await fetch('/api/frames');
+        const json = await res.json();
+        const container = document.getElementById('containerFramesGrid');
+        container.innerHTML = '';
+
+        if (json.data && json.data.length > 0) {
+          json.data.forEach((frame, idx) => {
+            const card = document.createElement('div');
+            card.className = `frame-card ${idx === 0 ? 'active-selected' : ''}`;
+
+            // Clicking card (not the arrow) just selects it; arrow click navigates
+            card.onclick = (e) => {
+              if (e.target.classList.contains('frame-card-arrow-btn') || e.target.closest('.frame-card-arrow-btn')) {
+                onSelectAndProceedFrame(frame.frameId, card);
+              } else {
+                onSelectFrame(frame.frameId, card);
+              }
+            };
+
+            const categoryTag = frameCategories[frame.frameId] || 'Style';
+
+            card.innerHTML = `
+              <div class="frame-selected-pill">✓ Selected</div>
+              <div class="frame-img-container">
+                <img src="${frame.previewUrl}" alt="${frame.name}" />
+              </div>
+              <div class="frame-card-bottom-row">
+                <div class="frame-text-info">
+                  <div class="frame-name-h3">${frame.name}</div>
+                  <div class="frame-category-tag">${categoryTag}</div>
+                </div>
+                <div class="frame-card-arrow-btn" title="Select & Continue">
+                  ➔
+                </div>
+              </div>
+            `;
+            container.appendChild(card);
+
+            if (idx === 0) {
+              chosenFrameId = frame.frameId;
+            }
+          });
+        }
+      } catch (err) {
+        console.error('Error fetching frames:', err);
+      }
+    }
+
+    // Select frame without navigating (tap card body)
+    function onSelectFrame(frameId, cardElem) {
+      chosenFrameId = frameId;
+      document.querySelectorAll('.frame-card').forEach(c => c.classList.remove('active-selected'));
+      cardElem.classList.add('active-selected');
+    }
+
+    // Select frame AND navigate (arrow click or via Continue button)
+    function onSelectAndProceedFrame(frameId, cardElem) {
+      onSelectFrame(frameId, cardElem);
+      setTimeout(() => switchStep(2), 150);
+    }
+
+    // Continue button on Step 1
+    function proceedFromStep1() {
+      if (!chosenFrameId) {
+        const firstCard = document.querySelector('.frame-card');
+        if (firstCard) firstCard.classList.add('active-selected');
+      }
+      switchStep(2);
+    }
+
+    // ----------------------------------------------------------------
+    // Step navigation
+    // ----------------------------------------------------------------
+    function switchStep(stepNum) {
+      if (stepNum !== 2 && webcamStream) {
+        webcamStream.getTracks().forEach(t => t.stop());
+        webcamStream = null;
+      }
+
+      document.querySelectorAll('.kiosk-screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(`viewStep${stepNum}`).classList.add('active');
+
+      // Populate photo thumbnails when entering Step 3 or 4
+      if (stepNum === 3 && photoBlobUrl) {
+        const preview = document.getElementById('step3PhotoPreview');
+        document.getElementById('step3ThumbImg').src = photoBlobUrl;
+        preview.style.display = 'flex';
+      }
+
+      if (stepNum === 4 && photoBlobUrl) {
+        const thumb = document.getElementById('step4PhotoThumb');
+        if (thumb) {
+          document.getElementById('step4ThumbImg').src = photoBlobUrl;
+          thumb.style.display = 'flex';
+        }
+      }
+    }
+
+    // Go back to photo step from Step 3
+    function goBackToPhoto() {
+      switchStep(2);
+    }
+
+    // ----------------------------------------------------------------
+    // 2. Live WebCam Capture
+    // ----------------------------------------------------------------
+    async function startWebcamLive() {
+      try {
+        const constraints = {
+          video: {
+            facingMode: 'user',
+            width: { ideal: 1080 },
+            height: { ideal: 1920 },
+          },
+          audio: false,
+        };
+
+        webcamStream = await navigator.mediaDevices.getUserMedia(constraints);
+        const video = document.getElementById('liveWebcamTag');
+        video.srcObject = webcamStream;
+        video.style.display = 'block';
+
+        document.getElementById('portraitPhotoImg').style.display = 'none';
+        document.getElementById('promptPlaceholderBox').style.display = 'none';
+        document.getElementById('initialActionButtons').style.display = 'none';
+        document.getElementById('controlsLiveCamera').style.display = 'flex';
+      } catch (err) {
+        console.warn('Direct webcam unavailable, opening file picker:', err);
+        document.getElementById('fileUploadHidden').click();
+      }
+    }
+
+    function cancelWebcamLive() {
+      if (webcamStream) {
+        webcamStream.getTracks().forEach(t => t.stop());
+        webcamStream = null;
+      }
+      document.getElementById('liveWebcamTag').style.display = 'none';
+      document.getElementById('promptPlaceholderBox').style.display = 'flex';
+      document.getElementById('initialActionButtons').style.display = 'flex';
+      document.getElementById('controlsLiveCamera').style.display = 'none';
+    }
+
+    function startSnapCountdown() {
+      const label = document.getElementById('countdownNumberText');
+      let countdown = 3;
+      label.innerText = countdown;
+      label.style.display = 'block';
+
+      const timer = setInterval(() => {
+        countdown--;
+        if (countdown > 0) {
+          label.innerText = countdown;
+        } else {
+          clearInterval(timer);
+          label.style.display = 'none';
+          snapPhotoFrame();
+        }
+      }, 1000);
+    }
+
+    function snapPhotoFrame() {
+      const video = document.getElementById('liveWebcamTag');
+      const canvas = document.getElementById('canvasHidden');
+      const flash = document.getElementById('flashLayerEffect');
+
+      flash.style.opacity = '1';
+      setTimeout(() => { flash.style.opacity = '0'; }, 150);
+
+      canvas.width = video.videoWidth || 720;
+      canvas.height = video.videoHeight || 1280;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob((blob) => {
+        photoBlob = blob;
+        photoBlobUrl = URL.createObjectURL(blob);
+
+        const img = document.getElementById('portraitPhotoImg');
+        img.src = photoBlobUrl;
+        img.style.display = 'block';
+
+        if (webcamStream) {
+          webcamStream.getTracks().forEach(t => t.stop());
+          webcamStream = null;
+        }
+        video.style.display = 'none';
+        document.getElementById('controlsLiveCamera').style.display = 'none';
+
+        // Auto-show confirm buttons then auto-navigate to step 3 after brief pause
+        document.getElementById('confirmedActionsStep2').style.display = 'block';
+
+        // Start video generation job in backend immediately (pre-upload photo)
+        // Then navigate to Step 3 for details
+        setTimeout(() => switchStep(3), 800);
+      }, 'image/jpeg', 0.95);
+    }
+
+    // ----------------------------------------------------------------
+    // 3. Gallery Upload Handling
+    // ----------------------------------------------------------------
+    function onFileSelected(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      photoBlob = file;
+      const reader = new FileReader();
+      reader.onload = (evt) => {
+        photoBlobUrl = evt.target.result;
+
+        const img = document.getElementById('portraitPhotoImg');
+        img.src = photoBlobUrl;
+        img.style.display = 'block';
+
+        document.getElementById('promptPlaceholderBox').style.display = 'none';
+        document.getElementById('initialActionButtons').style.display = 'none';
+        document.getElementById('confirmedActionsStep2').style.display = 'block';
+
+        // Auto-navigate to step 3 after brief pause
+        setTimeout(() => switchStep(3), 800);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function resetPhotoState() {
+      photoBlob = null;
+      if (photoBlobUrl && photoBlobUrl.startsWith('blob:')) {
+        URL.revokeObjectURL(photoBlobUrl);
+      }
+      photoBlobUrl = null;
+
+      document.getElementById('portraitPhotoImg').style.display = 'none';
+      document.getElementById('promptPlaceholderBox').style.display = 'flex';
+      document.getElementById('initialActionButtons').style.display = 'flex';
+      document.getElementById('confirmedActionsStep2').style.display = 'none';
+      document.getElementById('fileUploadHidden').value = '';
+
+      // Hide photo previews in steps 3 & 4
+      const step3Prev = document.getElementById('step3PhotoPreview');
+      if (step3Prev) step3Prev.style.display = 'none';
+      const step4Thumb = document.getElementById('step4PhotoThumb');
+      if (step4Thumb) step4Thumb.style.display = 'none';
+    }
+
+    // ----------------------------------------------------------------
+    // 4. Submit Job & Poll Progress
+    //    — Starts backend generation the moment user hits "Generate Video"
+    //    — Immediately switches to Step 4 (progress) so user sees their photo
+    // ----------------------------------------------------------------
+    async function submitKioskJob(e) {
+      e.preventDefault();
+      if (!photoBlob || !chosenFrameId) {
+        alert('Please choose a frame and capture/upload your photo.');
+        return;
+      }
+
+      // Switch to progress screen immediately — user sees their photo + spinner
+      switchStep(4);
+
+      const formData = new FormData();
+      formData.append('photo', photoBlob, 'guest_photo.jpg');
+      formData.append('frameId', chosenFrameId);
+      formData.append('fullName', document.getElementById('fieldFullName').value);
+      formData.append('email', document.getElementById('fieldEmail').value);
+      formData.append('phone', document.getElementById('fieldPhone').value);
+      formData.append('occasion', document.getElementById('fieldOccasion').value);
+      formData.append('message', document.getElementById('fieldMessage').value);
+
+      try {
+        const res = await fetch('/api/jobs/generate', {
+          method: 'POST',
+          body: formData,
+        });
+        const json = await res.json();
+        if (!json.success) throw new Error(json.error?.message || 'Submission failed');
+
+        startProgressCheck(json.data.jobId);
+      } catch (err) {
+        alert('Error: ' + err.message);
+        switchStep(3);
+      }
+    }
+
+    function startProgressCheck(jobId) {
+      if (pollingTimer) clearInterval(pollingTimer);
+
+      pollingTimer = setInterval(async () => {
+        try {
+          const res = await fetch(`/api/jobs/status/${jobId}`);
+          const json = await res.json();
+          if (!json.success) return;
+
+          const data = json.data;
+          const p = data.progress || 15;
+          document.getElementById('fillProgressBar').style.width = `${p}%`;
+          document.getElementById('labelPercentage').innerText = `${p}%`;
+
+          if (data.statusMessage) {
+            document.getElementById('statusMessageText').innerText = data.statusMessage;
+          }
+
+          if (data.isCompleted) {
+            clearInterval(pollingTimer);
+            showFinalResults(jobId);
+          } else if (data.isFailed) {
+            clearInterval(pollingTimer);
+            alert('Video generation failed: ' + (data.error || 'Unknown error'));
+            switchStep(3);
+          }
+        } catch (e) {
+          console.warn('Poll error:', e);
+        }
+      }, 1500);
+    }
+
+    async function showFinalResults(jobId) {
+      try {
+        const res = await fetch(`/api/jobs/result/${jobId}`);
+        const json = await res.json();
+        if (!json.success) return;
+
+        const result = json.data;
+        document.getElementById('videoFramedOutput').src = result.framedVideoUrl || result.rawVideoUrl;
+        document.getElementById('btnDownloadVideo').href = result.downloadVideoUrl;
+        document.getElementById('btnDownloadPhoto').href = result.downloadImageUrl;
+        document.getElementById('imgQrCode').src = result.qrCodeUrl;
+
+        switchStep(5);
+      } catch (e) {
+        console.error('Failed to load final result:', e);
+      }
+    }
+
+    function resetKioskFlow() {
+      resetPhotoState();
+      document.getElementById('formGuestDetails').reset();
+      if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
+      document.getElementById('fillProgressBar').style.width = '0%';
+      document.getElementById('labelPercentage').innerText = '0%';
+      switchStep(1);
+    }
+
+    // Initialize
+    loadFrames();
+  </script>
+</body>
+</html>
+

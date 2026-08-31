@@ -1,0 +1,43 @@
+{
+  "name": "ai-photobooth-backend",
+  "version": "1.0.0",
+  "description": "Backend for AI PhotoBooth / Frame AI video generation with modular AI providers and MongoDB",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "seed": "node src/utils/seedFrames.js",
+    "test:flow": "node test-flow.js"
+  },
+  "keywords": [
+    "ai",
+    "photobooth",
+    "video-generation",
+    "mongodb",
+    "fal-ai",
+    "replicate",
+    "runway",
+    "kling",
+    "ffmpeg",
+    "qr-code"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.7.9",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "ffmpeg-static": "^5.2.0",
+    "fluent-ffmpeg": "^2.1.3",
+    "mime-types": "^2.1.35",
+    "mongoose": "^8.9.5",
+    "multer": "^1.4.5-lts.1",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.33.5",
+    "uuid": "^11.0.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}

@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Frame AI - Your Video is Ready!</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(180deg, #1E3A8A 0%, #0F172A 100%);
+      min-height: 100vh;
+      color: #FFFFFF;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px 16px;
+    }
+
+    .container {
+      max-width: 480px;
+      width: 100%;
+      background: #FFFFFF;
+      color: #1E293B;
+      border-radius: 28px;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Nav / App Bar */
+    .app-bar {
+      background: #1D4ED8;
+      color: #FFFFFF;
+      padding: 18px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .app-title {
+      font-size: 20px;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      letter-spacing: 0.5px;
+    }
+
+    .card-body {
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #0F172A;
+      margin-bottom: 6px;
+    }
+
+    p.subtitle {
+      font-size: 14px;
+      color: #64748B;
+      margin-bottom: 20px;
+    }
+
+    /* Video Frame Container */
+    .media-container {
+      width: 100%;
+      max-width: 340px;
+      aspect-ratio: 9 / 16;
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      background: #000;
+      position: relative;
+      margin-bottom: 24px;
+    }
+
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .actions {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 14px;
+      font-size: 16px;
+      font-weight: 700;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: #1D4ED8;
+      color: #FFFFFF;
+      box-shadow: 0 4px 14px rgba(29, 78, 216, 0.35);
+    }
+
+    .btn-primary:hover, .btn-primary:active {
+      background: #1E40AF;
+      transform: translateY(-1px);
+    }
+
+    .btn-secondary {
+      background: #EFF6FF;
+      color: #1D4ED8;
+      border: 1.5px solid #BFDBFE;
+    }
+
+    .btn-secondary:hover, .btn-secondary:active {
+      background: #DBEAFE;
+    }
+
+    .details-box {
+      margin-top: 20px;
+      padding: 14px 16px;
+      background: #F8FAFC;
+      border-radius: 12px;
+      width: 100%;
+      font-size: 13px;
+      color: #475569;
+      text-align: left;
+    }
+
+    .footer-brand {
+      margin-top: 24px;
+      font-size: 13px;
+      color: #94A3B8;
+      text-align: center;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background: #E0E7FF;
+      color: #3730A3;
+      font-size: 11px;
+      font-weight: 700;
+      border-radius: 20px;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <div class="app-bar">
+      <div class="app-title">
+        <span>✨</span>
+        <span>FRAME AI</span>
+      </div>
+      <span>📸</span>
+    </div>
+
+    <!-- Body -->
+    <div class="card-body">
+      {{#if occasion}}
+        <div class="badge">{{occasion}}</div>
+      {{/if}}
+
+      <h1>Your Video is Ready! 🎉</h1>
+      <p class="subtitle">Preview, download & share your beautiful memory</p>
+
+      <!-- Video Player -->
+      <div class="media-container">
+        <video 
+          src="{{videoUrl}}" 
+          controls 
+          autoplay 
+          loop 
+          muted 
+          playsinline 
+          poster="{{imageUrl}}">
+          Your browser does not support video playback.
+        </video>
+      </div>
+
+      <!-- Action Buttons -->
+      <div class="actions">
+        <a href="{{downloadVideoUrl}}" class="btn btn-primary" download>
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+          </svg>
+          Download Video
+        </a>
+
+        <a href="{{downloadImageUrl}}" class="btn btn-secondary" download>
+          <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          Download Image
+        </a>
+      </div>
+
+      <!-- User Details Card -->
+      <div class="details-box">
+        <div><strong>Guest:</strong> {{fullName}}</div>
+        {{#if message}}
+          <div style="margin-top: 4px;"><strong>Message:</strong> "{{message}}"</div>
+        {{/if}}
+        <div style="margin-top: 4px; color: #94A3B8; font-size: 11px;">Created at {{formattedDate}}</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-brand">
+    <span>✨ Powered by Frame AI PhotoBooth Engine</span>
+  </div>
+
+</body>
+</html>
