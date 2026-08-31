@@ -38,7 +38,7 @@
       height: 100%;
       min-height: 100vh;
       min-height: 100dvh;
-      background: #FFFFFF;
+      background: #FFFFFF !important;
       color: var(--text-heading);
       overflow-x: hidden;
     }
@@ -46,22 +46,38 @@
     body {
       display: flex;
       justify-content: center;
-      align-items: stretch;
-      background: #FFFFFF;
+      align-items: center;
+      background: #FFFFFF !important;
+      width: 100%;
+      height: 100%;
+      min-height: 100vh;
+      min-height: 100dvh;
+      overflow: hidden;
     }
 
-    /* Kiosk Container - Locked 1080x1920 portrait kiosk canvas */
+    /* Kiosk Container - Full 1080x1920 portrait canvas */
     .kiosk-container {
-      width: 100vw;
+      width: 100%;
       max-width: 1080px;
       height: 100vh;
       height: 100dvh;
-      background: #FFFFFF;
+      background: #FFFFFF !important;
       display: flex;
       flex-direction: column;
       margin: 0 auto;
       position: relative;
       overflow: hidden;
+    }
+
+    /* Desktop Landscape Browser Preview: Center portrait container */
+    @media (min-width: 900px) and (orientation: landscape) {
+      body {
+        background: #FFFFFF !important;
+      }
+      .kiosk-container {
+        max-width: min(100vw, 540px);
+        box-shadow: 0 0 50px rgba(15, 23, 42, 0.08);
+      }
     }
 
     /* =========================================================================
@@ -73,10 +89,11 @@
       background-size: 300% 300%;
       animation: waveHeaderShift 8s ease infinite;
       color: #FFFFFF;
-      padding: clamp(18px, 2.4vh, 36px) clamp(22px, 4vw, 50px);
+      padding: clamp(16px, 2vh, 32px) clamp(20px, 4vw, 40px);
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
+      text-align: center;
       border-bottom-left-radius: clamp(24px, 3.5vw, 42px);
       border-bottom-right-radius: clamp(24px, 3.5vw, 42px);
       box-shadow: 0 10px 30px rgba(29, 78, 216, 0.28);
@@ -106,25 +123,9 @@
       100% { transform: scale(1.1) rotate(15deg); opacity: 0.9; }
     }
 
-    .header-brand-group {
-      display: flex;
-      align-items: center;
-      gap: 14px;
+    .header-title-text {
+      text-align: center;
       z-index: 2;
-    }
-
-    .header-logo-badge {
-      width: clamp(40px, 5vw, 56px);
-      height: clamp(40px, 5vw, 56px);
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(8px);
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
-      border-radius: clamp(12px, 1.8vw, 18px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(20px, 2.8vw, 28px);
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
     }
 
     .header-title-text h1 {
@@ -141,20 +142,6 @@
       opacity: 0.88;
       color: #DBEAFE;
       margin-top: 2px;
-    }
-
-    .header-icon-badge {
-      width: clamp(40px, 5vw, 54px);
-      height: clamp(40px, 5vw, 54px);
-      background: rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(8px);
-      border: 1.5px solid rgba(255, 255, 255, 0.35);
-      border-radius: clamp(12px, 1.8vw, 18px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: clamp(20px, 2.6vw, 28px);
-      z-index: 2;
     }
 
     /* Main Viewport Content - Full Width & Vertically Centered */
@@ -448,7 +435,7 @@
       max-height: clamp(300px, 42vh, 640px);
       border-radius: clamp(22px, 3vw, 40px);
       overflow: hidden;
-      background: #F8FAFC;
+      background: #FFFFFF;
       border: clamp(3px, 0.4vw, 5px) solid transparent;
       background-clip: padding-box;
       display: flex;
@@ -742,6 +729,39 @@
       margin-bottom: clamp(14px, 2vh, 26px);
     }
 
+    /* Interactive Fun Quiz Card CSS */
+    .fun-quiz-card {
+      background: #EFF6FF;
+      border: 2px solid #BFDBFE;
+      border-radius: clamp(16px, 2.2vw, 26px);
+      padding: clamp(14px, 2vh, 24px) clamp(16px, 2.5vw, 28px);
+      width: 100%;
+      max-width: clamp(360px, 55vw, 680px);
+      text-align: center;
+      margin-top: clamp(12px, 1.8vh, 22px);
+      box-shadow: 0 4px 18px rgba(37, 99, 235, 0.08);
+    }
+
+    .quiz-option-btn {
+      background: #FFFFFF;
+      border: 2px solid #BFDBFE;
+      color: #1D4ED8;
+      font-weight: 700;
+      font-size: clamp(13px, 1.6vw, 18px);
+      padding: clamp(8px, 1vh, 14px) clamp(14px, 2vw, 22px);
+      border-radius: clamp(10px, 1.5vw, 16px);
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .quiz-option-btn:hover, .quiz-option-btn.selected {
+      background: #2563EB;
+      color: #FFFFFF;
+      border-color: #1D4ED8;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+    }
+
     .video-framed-card video {
       width: 100%;
       height: 100%;
@@ -844,100 +864,121 @@
     }
 
     /* =========================================================================
-       KIOSK OVERRIDE: Fixed readable sizes for 1080x1920 portrait kiosk display
-       (clamp() vw values come out too small at 1080px — these override directly)
+       PORTRAIT KIOSK OVERRIDE (1080x1920 HD display)
+       Beautifully proportioned to fill 1080x1920 canvas without empty void
        ========================================================================= */
-    @media (min-width: 900px) {
+    @media (min-width: 768px) and (min-height: 980px) {
 
       /* Header */
       .header-bar {
-        padding: 28px 52px;
-        border-bottom-left-radius: 40px;
-        border-bottom-right-radius: 40px;
+        padding: 36px 52px;
+        border-bottom-left-radius: 44px;
+        border-bottom-right-radius: 44px;
       }
-      .header-logo-badge {
-        width: 58px; height: 58px;
-        font-size: 28px;
-        border-radius: 18px;
-      }
-      .header-title-text h1 { font-size: 34px; }
-      .header-title-text p  { font-size: 17px; }
-      .header-icon-badge    { width: 54px; height: 54px; font-size: 28px; }
+      .header-title-text h1 { font-size: 38px; }
+      .header-title-text p  { font-size: 19px; }
 
       /* Step pill badge */
-      .step-pill-badge { font-size: 16px; padding: 10px 24px; margin-bottom: 16px; }
+      .step-pill-badge { font-size: 17px; padding: 12px 26px; margin-bottom: 12px; }
       .step-pill-badge .dot { width: 10px; height: 10px; }
 
       /* Headings */
-      .heading-box h1 { font-size: 48px; margin-bottom: 8px; }
+      .heading-box { margin-bottom: 16px; }
+      .heading-box h1 { font-size: 44px; margin-bottom: 6px; }
       .heading-box p  { font-size: 22px; }
-      .step-dots-row  { gap: 10px; margin-top: 16px; }
-      .step-dot       { width: 12px; height: 10px; border-radius: 5px; }
-      .step-dot.active-bar { width: 44px; }
+      .step-dots-row  { gap: 10px; margin-top: 12px; }
+      .step-dot       { width: 14px; height: 12px; border-radius: 6px; }
+      .step-dot.active-bar { width: 48px; }
 
       /* Collection bar */
-      .collection-header   { font-size: 24px; gap: 10px; margin-bottom: 12px; }
-      .collection-subtitle { font-size: 17px; }
+      .collection-header   { font-size: 26px; gap: 12px; margin-bottom: 14px; }
+      .collection-subtitle { font-size: 18px; }
 
       /* Frame cards */
-      .frames-grid { gap: 28px; margin-bottom: 28px; }
-      .frame-card  { border-radius: 28px; padding: 16px; }
-      .frame-img-container { border-radius: 20px; max-height: 380px; }
-      .frame-card-bottom-row { margin-top: 16px; gap: 10px; }
-      .frame-name-h3      { font-size: 22px; }
-      .frame-category-tag { font-size: 16px; }
-      .frame-selected-pill { font-size: 15px; padding: 7px 18px; top: 22px; right: 22px; }
-      .frame-card-arrow-btn { width: 50px; height: 50px; font-size: 24px; }
-
-      /* Auto-save banner */
-      .auto-save-banner { font-size: 17px; margin-top: 14px; }
+      .frames-grid { gap: 24px; margin-bottom: 24px; }
+      .frame-card  { border-radius: 30px; padding: 20px; }
+      .frame-img-container { border-radius: 22px; max-height: 360px; }
+      .frame-card-bottom-row { margin-top: 18px; gap: 12px; }
+      .frame-name-h3      { font-size: 24px; }
+      .frame-category-tag { font-size: 17px; }
+      .frame-selected-pill { font-size: 16px; padding: 8px 20px; top: 24px; right: 24px; }
+      .frame-card-arrow-btn { width: 54px; height: 54px; font-size: 26px; }
 
       /* Camera / capture */
-      .camera-box-viewport { max-width: 620px; max-height: 600px; border-radius: 38px; margin-top: 36px; margin-bottom: 28px; }
-      .camera-box-viewport::before { border-radius: 42px; }
-      .countdown-number     { font-size: 120px; }
-      .capture-button-group { gap: 20px; max-width: 620px; }
-      .shutter-circle-btn   { width: 104px; height: 104px; font-size: 48px; border-width: 6px; border-radius: 52px; }
-      .or-label             { font-size: 18px; letter-spacing: 2px; }
-      .gallery-btn          { font-size: 24px; padding: 24px; border-radius: 22px; gap: 14px; }
-      .live-camera-snap-group { gap: 18px; max-width: 620px; }
+      .camera-box-viewport { max-width: 680px; max-height: 600px; border-radius: 42px; margin-top: 64px; margin-bottom: 28px; }
+      .camera-box-viewport::before { border-radius: 46px; }
+      .countdown-number     { font-size: 130px; }
+      .capture-button-group { gap: 20px; max-width: 680px; margin-top: 10px; }
+      .shutter-circle-btn   { width: 114px; height: 114px; font-size: 52px; border-width: 6px; border-radius: 57px; }
+      .or-label             { font-size: 20px; letter-spacing: 2px; }
+      .gallery-btn          { font-size: 26px; padding: 26px; border-radius: 24px; gap: 16px; }
+      .live-camera-snap-group { gap: 20px; max-width: 680px; margin-top: 10px; }
 
       /* Form */
-      .form-wrapper { max-width: 720px; }
+      .form-wrapper { max-width: 760px; }
       .form-row     { margin-bottom: 22px; }
-      .form-row label      { font-size: 22px; margin-bottom: 6px; gap: 10px; }
-      .form-input-field    { font-size: 22px; padding: 22px 26px; border-radius: 18px; }
-      .secure-badge        { font-size: 17px; margin-top: 22px; }
+      .form-row label      { font-size: 24px; margin-bottom: 8px; gap: 12px; }
+      .form-input-field    { font-size: 24px; padding: 22px 28px; border-radius: 20px; }
 
       /* Progress */
-      .spinner-ring  { width: 200px; height: 200px; margin-bottom: 32px; }
-      .spinner-icon  { font-size: 72px; }
-      .bar-track     { max-width: 640px; height: 16px; margin: 26px 0 14px; }
-      .pct-label     { font-size: 38px; margin-bottom: 30px; }
-      .magic-quote   { font-size: 20px; padding: 22px 30px; border-radius: 22px; max-width: 640px; gap: 12px; }
+      .spinner-ring  { width: 200px; height: 200px; margin-bottom: 28px; }
+      .spinner-icon  { font-size: 76px; }
+      .bar-track     { max-width: 680px; height: 18px; margin: 24px 0 14px; }
+      .pct-label     { font-size: 40px; margin-bottom: 28px; }
+      .magic-quote   { font-size: 20px; padding: 22px 30px; border-radius: 22px; max-width: 680px; gap: 14px; }
       #statusMessageText { font-size: 24px !important; }
 
       /* Result */
-      .result-box       { max-width: 680px; }
-      .video-framed-card { max-width: 540px; max-height: 520px; border-radius: 34px; margin-bottom: 24px; }
-      .qr-container     { margin-top: 26px; padding-top: 22px; gap: 10px; }
-      .qr-image         { width: 200px; height: 200px; border-radius: 20px; }
-      .qr-container div { font-size: 20px; }
+      .result-box       { max-width: 720px; }
+      .video-framed-card { max-width: 580px; max-height: 520px; border-radius: 36px; margin-bottom: 24px; }
+      .qr-container     { margin-top: 24px; padding-top: 20px; gap: 12px; }
+      .qr-image         { width: 200px; height: 200px; border-radius: 22px; }
+      .qr-container div { font-size: 22px; }
 
       /* All main buttons */
-      .btn-main-action { font-size: 26px; padding: 26px 40px; border-radius: 22px; gap: 14px; }
-      .btn-sub-action  { font-size: 22px; padding: 22px 36px; border-radius: 22px; gap: 12px; margin-top: 16px; }
-
-      /* Footer */
-      .footer-bar { font-size: 19px; padding: 20px 36px; gap: 12px; }
+      .btn-main-action { font-size: 26px; padding: 24px 40px; border-radius: 24px; gap: 16px; }
+      .btn-sub-action  { font-size: 22px; padding: 20px 36px; border-radius: 24px; gap: 14px; margin-top: 14px; }
 
       /* Confirmed actions wrapper */
-      #confirmedActionsStep2 { max-width: 620px !important; margin-top: 24px !important; }
-      #step2ConfirmedActions  { max-width: 620px !important; margin-top: 24px !important; }
+      #confirmedActionsStep2 { max-width: 680px !important; margin-top: 20px !important; }
+      #step2ConfirmedActions  { max-width: 680px !important; margin-top: 20px !important; }
 
-      /* viewport padding */
-      .viewport-content { padding: 50px 50px 24px; }
-      .kiosk-screen { max-width: 960px; }
+      /* viewport padding & comfortable top breathing space */
+      .viewport-content { padding: 58px 52px 36px; justify-content: flex-start; }
+      .kiosk-screen { max-width: 1000px; justify-content: flex-start; margin: 0 auto; }
+    }
+
+    /* =========================================================================
+       LAPTOP/DESKTOP BROWSER PREVIEW (Screen Height < 980px)
+       Fits all content on screen cleanly without scrollbars
+       ========================================================================= */
+    @media (max-height: 979px) {
+      .viewport-content { padding: 12px 24px 16px !important; }
+      .header-bar { padding: 14px 28px !important; }
+      .header-title-text h1 { font-size: 20px !important; }
+      .header-title-text p { font-size: 13px !important; }
+      .heading-box { margin-bottom: 12px !important; }
+      .heading-box h1 { font-size: 26px !important; margin-bottom: 4px !important; }
+      .heading-box p { font-size: 14px !important; }
+      .step-pill-badge { font-size: 12px !important; padding: 5px 14px !important; margin-bottom: 8px !important; }
+      .collection-header { font-size: 18px !important; margin-bottom: 4px !important; }
+      .collection-subtitle { font-size: 12px !important; }
+      .frames-grid { gap: 14px !important; margin-bottom: 14px !important; }
+      .frame-card { padding: 10px !important; border-radius: 16px !important; }
+      .frame-img-container { max-height: 220px !important; border-radius: 12px !important; }
+      .frame-name-h3 { font-size: 15px !important; }
+      .frame-category-tag { font-size: 12px !important; }
+      .frame-card-arrow-btn { width: 36px !important; height: 36px !important; font-size: 18px !important; }
+      .btn-main-action { font-size: 18px !important; padding: 14px 28px !important; border-radius: 14px !important; margin-top: 10px !important; }
+      .btn-sub-action { font-size: 15px !important; padding: 12px 24px !important; border-radius: 14px !important; margin-top: 10px !important; }
+      .camera-box-viewport { max-height: 380px !important; margin-top: 12px !important; margin-bottom: 14px !important; }
+      .shutter-circle-btn { width: 72px !important; height: 72px !important; font-size: 32px !important; }
+      .gallery-btn { font-size: 16px !important; padding: 14px !important; }
+      .spinner-ring { width: 120px !important; height: 120px !important; margin-bottom: 16px !important; }
+      .spinner-icon { font-size: 44px !important; }
+      .bar-track { max-width: 480px !important; height: 12px !important; margin: 16px 0 10px !important; }
+      .pct-label { font-size: 26px !important; margin-bottom: 16px !important; }
+      .magic-quote { font-size: 14px !important; padding: 12px 20px !important; border-radius: 14px !important; }
     }
   </style>
 </head>
@@ -947,14 +988,10 @@
 
     <!-- Top Wavy Ambient Gradient Header -->
     <div class="header-bar">
-      <div class="header-brand-group">
-        <div class="header-logo-badge">✨</div>
-        <div class="header-title-text">
-          <h1>FRAME AI</h1>
-          <p>AI Memory Creator</p>
-        </div>
+      <div class="header-title-text">
+        <h1>FRAME AI</h1>
+        <p>AI Memory Creator</p>
       </div>
-      <div class="header-icon-badge">📸</div>
     </div>
 
     <!-- Main Viewport Content - Full Width & Vertically Centered -->
@@ -1125,43 +1162,62 @@
           </div>
 
           <button type="submit" class="btn-main-action" style="margin-top: 18px;">
-            Generate Video ✨
+            Submit →
           </button>
         </form>
       </div>
 
       <!-- ===================================================================
-           STEP 4: CREATING VIDEO PROGRESS (Slide 4 reference design)
+           STEP 4: FUN AI MEMORY QUIZ SLIDER (Shows while video finishes in background)
            =================================================================== -->
       <div class="kiosk-screen" id="viewStep4">
         
-        <div class="step-icon-badge">
-          🎬
+        <div class="step-icon-badge" style="background:#EFF6FF; border-color:#BFDBFE; color:#1D4ED8;">
+          🎮
         </div>
 
-        <div class="heading-box" style="margin-bottom: 24px;">
-          <h1 style="margin-bottom: 6px;">Creating Your <span class="highlight">Video</span></h1>
-          <p style="font-size: clamp(16px, 2.2vw, 24px);">This may take a few moments</p>
+        <div class="heading-box" style="margin-bottom: 20px;">
+          <h1 style="margin-bottom: 6px;">Fun AI <span class="highlight">Quiz</span> ⚡</h1>
+          <p style="font-size: clamp(16px, 2.2vw, 24px);">Play a quick quiz while your video finishes in the background!</p>
         </div>
 
-        <div class="progress-box">
-          <div class="spinner-ring">
-            <div class="spinner-icon">🎬</div>
+        <div class="progress-box" style="padding: 0; width: 100%;">
+          
+          <!-- Interactive Fun AI Memory Quiz Card 1 -->
+          <div class="fun-quiz-card" id="quizCardContainer" style="margin-top: 0; width: 100%; max-width: 720px; padding: 26px 30px;">
+            <div style="font-size: clamp(17px, 2.2vw, 24px); font-weight: 800; color: #1D4ED8; margin-bottom: 10px;">
+              ✨ Question 1 of 2:
+            </div>
+            <div id="quizQuestionText" style="font-size: clamp(16px, 2vw, 22px); font-weight: 800; color: #0F172A; margin-bottom: 18px;">
+              Pick the mood of your cinematic memory:
+            </div>
+            <div id="quizOptionsGroup" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Cinematic Blockbuster 🎬')">🎬 Cinematic Blockbuster</button>
+              <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Royal Elegance 👑')">👑 Royal Elegance</button>
+              <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Pure Magic 🌟')">🌟 Pure Magic</button>
+              <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Retro Vintage 🎞️')">🎞️ Retro Vintage</button>
+            </div>
           </div>
 
-          <p id="statusMessageText" style="font-size: clamp(16px, 2.2vw, 24px); color: #334155; margin: 12px 0 20px; font-weight: 700; text-align: center;">
-            Please wait while we create your personalized Video...
-          </p>
-
-          <div class="bar-track">
-            <div class="bar-fill" id="fillProgressBar"></div>
+          <!-- Interactive Fun AI Memory Quiz Card 2 -->
+          <div class="fun-quiz-card" style="margin-top: 18px; width: 100%; max-width: 720px; padding: 26px 30px;">
+            <div style="font-size: clamp(17px, 2.2vw, 24px); font-weight: 800; color: #1D4ED8; margin-bottom: 10px;">
+              🎵 Question 2 of 2:
+            </div>
+            <div style="font-size: clamp(16px, 2vw, 22px); font-weight: 800; color: #0F172A; margin-bottom: 18px;">
+              What theme music best fits your style?
+            </div>
+            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+              <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Pop Hits 🎸')">🎸 Pop Hits</button>
+              <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Orchestral Strings 🎻')">🎻 Orchestral Strings</button>
+              <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Lo-Fi Chill Beats 🎧')">🎧 Lo-Fi Beats</button>
+            </div>
           </div>
-          <div class="pct-label" id="labelPercentage">75%</div>
 
-          <div class="magic-quote">
-            <span>✨</span>
-            <span>Great things take time, but magic is on the way! ✨</span>
+          <div id="quizFeedbackText" style="display:none; font-size: clamp(16px, 2.2vw, 22px); font-weight: 800; color: #059669; margin-top: 18px; text-align: center;">
+            Awesome pick! Your AI video is rendering in background... 🎉
           </div>
+
         </div>
 
       </div>
@@ -1215,9 +1271,11 @@
   <script>
     let chosenFrameId = null;
     let photoBlob = null;
-    let photoBlobUrl = null;   // object URL kept for showing thumbnails
+    let photoBlobUrl = null;
     let webcamStream = null;
     let pollingTimer = null;
+    let activeJobId = null;
+    let isJobCompleted = false;
 
     const frameCategories = {
       'frame-vintage-floral': 'Romance',
@@ -1241,7 +1299,6 @@
             const card = document.createElement('div');
             card.className = `frame-card ${idx === 0 ? 'active-selected' : ''}`;
 
-            // Clicking card (not the arrow) just selects it; arrow click navigates
             card.onclick = (e) => {
               if (e.target.classList.contains('frame-card-arrow-btn') || e.target.closest('.frame-card-arrow-btn')) {
                 onSelectAndProceedFrame(frame.frameId, card);
@@ -1279,20 +1336,17 @@
       }
     }
 
-    // Select frame without navigating (tap card body)
     function onSelectFrame(frameId, cardElem) {
       chosenFrameId = frameId;
       document.querySelectorAll('.frame-card').forEach(c => c.classList.remove('active-selected'));
       cardElem.classList.add('active-selected');
     }
 
-    // Select frame AND navigate (arrow click or via Continue button)
     function onSelectAndProceedFrame(frameId, cardElem) {
       onSelectFrame(frameId, cardElem);
       setTimeout(() => switchStep(2), 150);
     }
 
-    // Continue button on Step 1
     function proceedFromStep1() {
       if (!chosenFrameId) {
         const firstCard = document.querySelector('.frame-card');
@@ -1313,11 +1367,12 @@
       document.querySelectorAll('.kiosk-screen').forEach(s => s.classList.remove('active'));
       document.getElementById(`viewStep${stepNum}`).classList.add('active');
 
-      // Populate photo thumbnails when entering Step 3 or 4
       if (stepNum === 3 && photoBlobUrl) {
         const preview = document.getElementById('step3PhotoPreview');
-        document.getElementById('step3ThumbImg').src = photoBlobUrl;
-        preview.style.display = 'flex';
+        if (preview) {
+          document.getElementById('step3ThumbImg').src = photoBlobUrl;
+          preview.style.display = 'flex';
+        }
       }
 
       if (stepNum === 4 && photoBlobUrl) {
@@ -1329,13 +1384,12 @@
       }
     }
 
-    // Go back to photo step from Step 3
     function goBackToPhoto() {
       switchStep(2);
     }
 
     // ----------------------------------------------------------------
-    // 2. Live WebCam Capture
+    // 2. Live WebCam Capture & Instant Background Generation
     // ----------------------------------------------------------------
     async function startWebcamLive() {
       try {
@@ -1419,19 +1473,16 @@
         }
         video.style.display = 'none';
         document.getElementById('controlsLiveCamera').style.display = 'none';
-
-        // Auto-show confirm buttons then auto-navigate to step 3 after brief pause
         document.getElementById('confirmedActionsStep2').style.display = 'block';
 
-        // Start video generation job in backend immediately (pre-upload photo)
-        // Then navigate to Step 3 for details
-        setTimeout(() => switchStep(3), 800);
+        // INSTANTLY START VIDEO GENERATION IN BACKEND!
+        triggerInstantBackendGeneration();
+
+        // Switch to Step 3 for details after brief 600ms transition
+        setTimeout(() => switchStep(3), 600);
       }, 'image/jpeg', 0.95);
     }
 
-    // ----------------------------------------------------------------
-    // 3. Gallery Upload Handling
-    // ----------------------------------------------------------------
     function onFileSelected(e) {
       const file = e.target.files[0];
       if (!file) return;
@@ -1449,10 +1500,38 @@
         document.getElementById('initialActionButtons').style.display = 'none';
         document.getElementById('confirmedActionsStep2').style.display = 'block';
 
-        // Auto-navigate to step 3 after brief pause
-        setTimeout(() => switchStep(3), 800);
+        // INSTANTLY START VIDEO GENERATION IN BACKEND!
+        triggerInstantBackendGeneration();
+
+        // Switch to Step 3 for details after brief 600ms transition
+        setTimeout(() => switchStep(3), 600);
       };
       reader.readAsDataURL(file);
+    }
+
+    // Triggers video rendering in the background IMMEDIATELY when photo is chosen!
+    async function triggerInstantBackendGeneration() {
+      if (!photoBlob || !chosenFrameId) return;
+
+      isJobCompleted = false;
+      const formData = new FormData();
+      formData.append('photo', photoBlob, 'guest_photo.jpg');
+      formData.append('frameId', chosenFrameId);
+
+      try {
+        const res = await fetch('/api/jobs/generate', {
+          method: 'POST',
+          body: formData,
+        });
+        const json = await res.json();
+        if (json.success && json.data?.jobId) {
+          activeJobId = json.data.jobId;
+          console.log('⚡ Video generation started instantly in background! JobId:', activeJobId);
+          startProgressCheck(activeJobId);
+        }
+      } catch (err) {
+        console.error('Instant background generation trigger error:', err);
+      }
     }
 
     function resetPhotoState() {
@@ -1461,6 +1540,8 @@
         URL.revokeObjectURL(photoBlobUrl);
       }
       photoBlobUrl = null;
+      activeJobId = null;
+      isJobCompleted = false;
 
       document.getElementById('portraitPhotoImg').style.display = 'none';
       document.getElementById('promptPlaceholderBox').style.display = 'flex';
@@ -1468,7 +1549,6 @@
       document.getElementById('confirmedActionsStep2').style.display = 'none';
       document.getElementById('fileUploadHidden').value = '';
 
-      // Hide photo previews in steps 3 & 4
       const step3Prev = document.getElementById('step3PhotoPreview');
       if (step3Prev) step3Prev.style.display = 'none';
       const step4Thumb = document.getElementById('step4PhotoThumb');
@@ -1476,9 +1556,7 @@
     }
 
     // ----------------------------------------------------------------
-    // 4. Submit Job & Poll Progress
-    //    — Starts backend generation the moment user hits "Generate Video"
-    //    — Immediately switches to Step 4 (progress) so user sees their photo
+    // 3. User Details Form Submit & Progress Routing
     // ----------------------------------------------------------------
     async function submitKioskJob(e) {
       e.preventDefault();
@@ -1487,17 +1565,42 @@
         return;
       }
 
-      // Switch to progress screen immediately — user sees their photo + spinner
-      switchStep(4);
+      const fullName = document.getElementById('fieldFullName').value;
+      const email = document.getElementById('fieldEmail').value;
+      const phone = document.getElementById('fieldPhone').value;
+      const occasion = document.getElementById('fieldOccasion').value;
+      const message = document.getElementById('fieldMessage').value;
 
+      // If video generation was already triggered instantly in background
+      if (activeJobId) {
+        // Save user details to existing job
+        fetch('/api/jobs/update-details', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ jobId: activeJobId, fullName, email, phone, occasion, message })
+        }).catch(err => console.warn('Update details silent error:', err));
+
+        // If video ALREADY completed while user was entering details!
+        if (isJobCompleted) {
+          showFinalResults(activeJobId);
+          return;
+        } else {
+          // Open Step 4 progress view with Interactive Fun Quiz!
+          switchStep(4);
+          return;
+        }
+      }
+
+      // Fallback if activeJobId wasn't created yet
+      switchStep(4);
       const formData = new FormData();
       formData.append('photo', photoBlob, 'guest_photo.jpg');
       formData.append('frameId', chosenFrameId);
-      formData.append('fullName', document.getElementById('fieldFullName').value);
-      formData.append('email', document.getElementById('fieldEmail').value);
-      formData.append('phone', document.getElementById('fieldPhone').value);
-      formData.append('occasion', document.getElementById('fieldOccasion').value);
-      formData.append('message', document.getElementById('fieldMessage').value);
+      formData.append('fullName', fullName);
+      formData.append('email', email);
+      formData.append('phone', phone);
+      formData.append('occasion', occasion);
+      formData.append('message', message);
 
       try {
         const res = await fetch('/api/jobs/generate', {
@@ -1507,7 +1610,8 @@
         const json = await res.json();
         if (!json.success) throw new Error(json.error?.message || 'Submission failed');
 
-        startProgressCheck(json.data.jobId);
+        activeJobId = json.data.jobId;
+        startProgressCheck(activeJobId);
       } catch (err) {
         alert('Error: ' + err.message);
         switchStep(3);
@@ -1525,16 +1629,25 @@
 
           const data = json.data;
           const p = data.progress || 15;
-          document.getElementById('fillProgressBar').style.width = `${p}%`;
-          document.getElementById('labelPercentage').innerText = `${p}%`;
+          const bar = document.getElementById('fillProgressBar');
+          const lbl = document.getElementById('labelPercentage');
+          if (bar) bar.style.width = `${p}%`;
+          if (lbl) lbl.innerText = `${p}%`;
 
           if (data.statusMessage) {
-            document.getElementById('statusMessageText').innerText = data.statusMessage;
+            const msg = document.getElementById('statusMessageText');
+            if (msg) msg.innerText = data.statusMessage;
           }
 
           if (data.isCompleted) {
+            isJobCompleted = true;
             clearInterval(pollingTimer);
-            showFinalResults(jobId);
+            
+            // If user is currently on Step 4 (Progress screen), automatically show Step 5!
+            const step4Screen = document.getElementById('viewStep4');
+            if (step4Screen && step4Screen.classList.contains('active')) {
+              showFinalResults(jobId);
+            }
           } else if (data.isFailed) {
             clearInterval(pollingTimer);
             alert('Video generation failed: ' + (data.error || 'Unknown error'));
@@ -1543,7 +1656,7 @@
         } catch (e) {
           console.warn('Poll error:', e);
         }
-      }, 1500);
+      }, 1200);
     }
 
     async function showFinalResults(jobId) {
@@ -1564,12 +1677,33 @@
       }
     }
 
+    // ----------------------------------------------------------------
+    // Interactive Fun AI Quiz Handler
+    // ----------------------------------------------------------------
+    function selectQuizOption(btnElem, choiceLabel) {
+      document.querySelectorAll('.quiz-option-btn').forEach(b => b.classList.remove('selected'));
+      btnElem.classList.add('selected');
+      
+      const feedback = document.getElementById('quizFeedbackText');
+      if (feedback) {
+        feedback.innerText = `Awesome choice ("${choiceLabel}")! Your AI video is rendering magic... 🎉`;
+        feedback.style.display = 'block';
+      }
+    }
+
     function resetKioskFlow() {
       resetPhotoState();
       document.getElementById('formGuestDetails').reset();
       if (pollingTimer) { clearInterval(pollingTimer); pollingTimer = null; }
-      document.getElementById('fillProgressBar').style.width = '0%';
-      document.getElementById('labelPercentage').innerText = '0%';
+      const bar = document.getElementById('fillProgressBar');
+      const lbl = document.getElementById('labelPercentage');
+      if (bar) bar.style.width = '0%';
+      if (lbl) lbl.innerText = '0%';
+      
+      const feedback = document.getElementById('quizFeedbackText');
+      if (feedback) feedback.style.display = 'none';
+      document.querySelectorAll('.quiz-option-btn').forEach(b => b.classList.remove('selected'));
+
       switchStep(1);
     }
 

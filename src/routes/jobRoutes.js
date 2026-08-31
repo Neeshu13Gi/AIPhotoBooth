@@ -6,6 +6,9 @@ const upload = require('../middlewares/upload');
 // Step 3 -> 4: Upload photo + details and trigger AI video generation
 router.post('/generate', upload.single('photo'), jobController.createJob);
 
+// Step 3: Update guest details on active background generation job
+router.post('/update-details', jobController.updateUserDetails);
+
 // Step 4: Check generation progress & status
 router.get('/status/:jobId', jobController.getJobStatus);
 

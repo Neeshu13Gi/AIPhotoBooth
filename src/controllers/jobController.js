@@ -14,14 +14,6 @@ exports.createJob = async (req, res, next) => {
   try {
     const { fullName, email, phone, occasion, message, frameId } = req.body;
 
-    // Validation
-    if (!fullName || !email || !phone) {
-      return res.status(400).json({
-        success: false,
-        error: { message: 'Full name, email, and phone number are required' },
-      });
-    }
-
     if (!frameId) {
       return res.status(400).json({
         success: false,
@@ -54,13 +46,13 @@ exports.createJob = async (req, res, next) => {
 
     const jobId = `job_${Date.now()}_${uuidv4().substring(0, 8)}`;
 
-    // Create DB Document
+    // Create DB Document (user details can be provided now or updated later)
     const job = await GenerationJob.create({
       jobId,
       userDetails: {
-        fullName,
-        email,
-        phone,
+        fullName: fullName || 'Kiosk Guest',
+        email: email || '',
+        phone: phone || '',
         occasion: occasion || '',
         message: message || '',
       },
@@ -75,7 +67,7 @@ exports.createJob = async (req, res, next) => {
       model: config.videoModel,
     });
 
-    // Fire background execution (non-blocking)
+    // Fire background execution (non-blocking - starts AI video generation immediately!)
     setImmediate(() => {
       QueueService.processJob(jobId).catch((err) => {
         console.error(`[JobController] Background job ${jobId} failed:`, err);
@@ -93,6 +85,40 @@ exports.createJob = async (req, res, next) => {
         checkStatusUrl: `/api/jobs/status/${job.jobId}`,
         resultUrl: `/api/jobs/result/${job.jobId}`,
       },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Step 3: Update user details on active background job
+ */
+exports.updateUserDetails = async (req, res, next) => {
+  try {
+    const { jobId, fullName, email, phone, occasion, message } = req.body;
+    if (!jobId) {
+      return res.status(400).json({ success: false, error: { message: 'jobId is required' } });
+    }
+
+    const job = await GenerationJob.findOne({ jobId });
+    if (!job) {
+      return res.status(404).json({ success: false, error: { message: 'Job not found' } });
+    }
+
+    job.userDetails = {
+      fullName: fullName || job.userDetails?.fullName || 'Kiosk Guest',
+      email: email || job.userDetails?.email || '',
+      phone: phone || job.userDetails?.phone || '',
+      occasion: occasion || job.userDetails?.occasion || '',
+      message: message || job.userDetails?.message || '',
+    };
+    await job.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'User details updated successfully',
+      data: { jobId: job.jobId, status: job.status, progress: job.progress },
     });
   } catch (error) {
     next(error);
