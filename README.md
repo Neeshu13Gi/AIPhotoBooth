@@ -60,52 +60,9 @@ If you are developing a custom separate frontend framework (e.g. React/Vite app 
 
 ---
 
-## ⚙️ Environment Configuration (`.env`)
+## ⚙️ Environment Configuration
 
-You can switch video AI providers and models dynamically in `.env` without editing any code:
-
-```env
-PORT=5000
-NODE_ENV=development
-APP_BASE_URL=http://localhost:5000
-
-# ==============================================================================
-# MongoDB Connection (Local or Atlas)
-# Database Name: AIPhotoBoothUser
-# ==============================================================================
-MONGODB_URI=mongodb+srv://neeshu:qNrSkL65bbNqIkZW@neeshu.cwxzomm.mongodb.net/AIPhotoBoothUser?retryWrites=true&w=majority&appName=neeshu
-
-# ==============================================================================
-# DYNAMIC AI VIDEO GENERATION PROVIDER
-# Supported: mock | fal | replicate | runway | kling | luma
-# ==============================================================================
-VIDEO_PROVIDER=mock
-
-# Set ANY model from your provider:
-# For Fal.ai:
-#   VIDEO_MODEL=fal-ai/wan/v2.2-a14b/image-to-video
-#   VIDEO_MODEL=fal-ai/minimax-video
-# For Replicate:
-#   VIDEO_MODEL=kwaivgi/kling-v1.6-standard
-# For Runway:
-#   VIDEO_MODEL=gen3a_turbo
-# For Luma:
-#   VIDEO_MODEL=ray-2
-VIDEO_MODEL=fal-ai/wan/v2.2-a14b/image-to-video
-
-# API Keys (Update when using cloud providers)
-FAL_KEY=
-REPLICATE_API_TOKEN=
-RUNWAY_API_SECRET=
-KLING_ACCESS_KEY=
-KLING_SECRET_KEY=
-LUMA_API_KEY=
-
-VIDEO_DURATION_SECONDS=5
-VIDEO_ASPECT_RATIO=9:16
-DEFAULT_MOTION_PROMPT=gentle warm smile, natural subtle head movement, glowing photorealistic lighting, cinematic portrait
-STORAGE_TYPE=local
-```
+Copy `.env.example` to `.env` and fill in your local database credentials and provider API keys. The `.env` file is ignored by Git and must never be committed.
 
 ---
 
