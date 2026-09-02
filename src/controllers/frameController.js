@@ -2,16 +2,33 @@ const Frame = require('../models/Frame');
 const config = require('../config/env');
 const path = require('path');
 
+// The built-in role previews are deployed with the application.  MongoDB may
+// still contain an old localhost URL from development, so never send that URL
+// to a browser in production.
+function getPublicFrameUrl(frameId, kind) {
+  const suffix = kind === 'preview' ? '_preview.png' : '.png';
+  return `/uploads/frames/${frameId}${suffix}`;
+}
+
 /**
  * Get all active frames (Step 1 of PhotoBooth Flow)
  */
 exports.getFrames = async (req, res, next) => {
   try {
     const frames = await Frame.find({ isActive: true }).sort({ order: 1, createdAt: 1 });
+    const publicFrames = frames.map((frame) => {
+      const item = typeof frame.toObject === 'function' ? frame.toObject() : { ...frame };
+      if (String(item.frameId || '').startsWith('role-')) {
+        item.previewUrl = getPublicFrameUrl(item.frameId, 'preview');
+        item.overlayUrl = getPublicFrameUrl(item.frameId, 'overlay');
+      }
+      return item;
+    });
+
     res.status(200).json({
       success: true,
-      count: frames.length,
-      data: frames,
+      count: publicFrames.length,
+      data: publicFrames,
     });
   } catch (error) {
     next(error);

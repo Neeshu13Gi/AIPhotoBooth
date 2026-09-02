@@ -1,7 +1,19 @@
 .env
 .env.*
 node_modules/
-uploads/
+# Generated guest photos, rendered videos, and QR codes stay local. The four
+# built-in role previews below are application assets and must ship to Vercel.
+uploads/*
+!uploads/frames/
+uploads/frames/*
+!uploads/frames/role-engineer-male.png
+!uploads/frames/role-engineer-male_preview.png
+!uploads/frames/role-doctor-male.png
+!uploads/frames/role-doctor-male_preview.png
+!uploads/frames/role-professor-male.png
+!uploads/frames/role-professor-male_preview.png
+!uploads/frames/role-business-male.png
+!uploads/frames/role-business-male_preview.png
 .DS_Store
 npm-debug.log*
 .vercel

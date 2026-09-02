@@ -1298,6 +1298,165 @@
       #viewStep4 #labelPercentage { font-size: 21px !important; }
       #viewStep4 #statusMessageText { font-size: 22px !important; }
     }
+
+    /* Phones are a scrollable experience, not a fixed-height kiosk canvas.
+       This keeps every card, form field and primary action reachable. */
+    @media (max-width: 767px) {
+      html,
+      body {
+        height: auto;
+        min-height: 100%;
+        overflow-x: hidden;
+        overflow-y: auto;
+      }
+
+      body {
+        display: block;
+        min-height: 100dvh;
+        overflow-y: auto;
+      }
+
+      .kiosk-container {
+        width: 100%;
+        min-height: 100dvh;
+        height: auto;
+        overflow: visible;
+      }
+
+      .header-bar {
+        width: calc(100% - 24px);
+        margin: 12px auto 0;
+        padding: 14px 16px !important;
+        border-radius: 20px;
+      }
+
+      .header-logo-badge { gap: 10px; }
+      .header-cam-icon {
+        width: 42px !important;
+        height: 42px !important;
+        font-size: 20px !important;
+        border-radius: 13px;
+      }
+      .header-title-text h1 { font-size: 19px !important; }
+      .header-title-text p { font-size: 10px !important; }
+      .header-grid-dots {
+        width: 36px;
+        height: 36px;
+        border-radius: 12px;
+        background-size: 8px 8px;
+        background-position: 6px 6px;
+      }
+
+      .viewport-content {
+        display: block;
+        flex: 0 0 auto;
+        min-height: calc(100dvh - 82px);
+        padding: 22px 14px 40px !important;
+        overflow: visible !important;
+      }
+
+      .kiosk-screen {
+        width: 100%;
+        max-width: none;
+        min-height: 0;
+        padding-bottom: 24px;
+      }
+
+      .step-pill-badge {
+        font-size: 10px !important;
+        padding: 6px 11px !important;
+        margin-bottom: 12px !important;
+      }
+      .heading-box { margin-bottom: 16px !important; }
+      .heading-box h1 { font-size: 26px !important; line-height: 1.18; }
+      .heading-box p { font-size: 13px !important; line-height: 1.45; }
+      .collection-header { font-size: 15px !important; }
+      .collection-subtitle { font-size: 10px !important; }
+
+      .frames-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+        gap: 10px !important;
+        margin-bottom: 0 !important;
+      }
+      .frame-card { padding: 8px !important; border-radius: 14px !important; }
+      .frame-img-container {
+        max-height: none !important;
+        min-height: 0 !important;
+        aspect-ratio: 0.78 !important;
+        border-radius: 10px !important;
+      }
+      .frame-name-h3 { font-size: 12px !important; }
+      .frame-category-tag { font-size: 9px !important; }
+      .frame-card-arrow-btn {
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 15px !important;
+      }
+
+      .camera-box-viewport {
+        width: 100%;
+        min-height: 280px;
+        max-height: none !important;
+        margin: 14px 0 !important;
+      }
+      .capture-button-group,
+      .live-camera-snap-group { gap: 12px !important; }
+      .shutter-circle-btn { width: 68px !important; height: 68px !important; font-size: 30px !important; }
+      .gallery-btn { font-size: 14px !important; padding: 13px !important; }
+
+      .form-wrapper { width: 100%; max-width: none !important; }
+      .form-row { margin-bottom: 14px !important; }
+      .form-row label { font-size: 13px !important; margin-bottom: 6px !important; }
+      .form-input-field { font-size: 15px !important; padding: 13px 14px !important; }
+      .btn-main-action {
+        width: 100%;
+        font-size: 16px !important;
+        padding: 15px 18px !important;
+        margin-top: 12px !important;
+        border-radius: 15px !important;
+      }
+      .btn-sub-action {
+        width: 100%;
+        font-size: 14px !important;
+        padding: 13px 16px !important;
+        border-radius: 15px !important;
+      }
+
+      #viewStep4 .step-icon-badge { width: 64px !important; height: 64px !important; font-size: 30px !important; }
+      #viewStep4 .heading-box h1 { font-size: 29px !important; }
+      #viewStep4 .fun-quiz-card {
+        width: 100% !important;
+        padding: 20px 12px !important;
+        margin-top: 14px !important;
+        border-radius: 20px !important;
+      }
+      #viewStep4 .fun-quiz-card > div:first-child { font-size: 14px !important; }
+      #viewStep4 .fun-quiz-card > div:nth-child(2) { font-size: 16px !important; line-height: 1.4; }
+      #viewStep4 #quizOptionsGroup { gap: 9px !important; }
+      #viewStep4 .quiz-option-btn {
+        min-height: 44px !important;
+        font-size: 13px !important;
+        padding: 10px 12px !important;
+        border-radius: 13px !important;
+      }
+      #viewStep4 .rendering-progress-banner {
+        width: 100% !important;
+        min-height: 106px !important;
+        margin-top: 16px !important;
+        padding: 16px !important;
+        border-radius: 18px !important;
+      }
+      #viewStep4 .rendering-progress-banner svg { width: 58px !important; height: 58px !important; }
+      #viewStep4 #labelPercentage { font-size: 14px !important; }
+      #viewStep4 #statusMessageText { font-size: 13px !important; }
+
+      .spinner-ring { width: 112px !important; height: 112px !important; }
+      .spinner-icon { font-size: 42px !important; }
+      .bar-track { width: 100%; height: 11px !important; }
+      .magic-quote { font-size: 13px !important; padding: 13px 16px !important; }
+      .video-framed-card { width: 100%; max-height: none !important; }
+      .qr-image { width: 148px !important; height: 148px !important; }
+    }
   </style>
 </head>
 <body>
@@ -1736,6 +1895,11 @@
       }
 
       filtered.forEach((frame, idx) => {
+        // Role assets are bundled with this app. Prefer this deployment-safe
+        // path over any stale localhost URL that may be stored in MongoDB.
+        const previewUrl = String(frame.frameId || '').startsWith('role-')
+          ? `/uploads/frames/${frame.frameId}_preview.png`
+          : frame.previewUrl;
         const card = document.createElement('div');
         const isSelected = chosenFrameId ? (frame.frameId === chosenFrameId) : (idx === 0);
 
@@ -1751,7 +1915,7 @@
         card.innerHTML = `
           <div class="frame-selected-pill">✓ Selected</div>
           <div class="frame-img-container">
-            <img src="${frame.previewUrl}" alt="${frame.name}" onerror="this.onerror=null; this.src='/uploads/frames/role-engineer-male_preview.png';" />
+            <img src="${previewUrl}" alt="${frame.name}" onerror="this.onerror=null; this.src='/uploads/frames/role-engineer-male_preview.png';" />
           </div>
           <div class="frame-card-bottom-row">
             <div class="frame-text-info">
