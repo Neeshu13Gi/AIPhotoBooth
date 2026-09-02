@@ -8,7 +8,7 @@ class FalVideoProvider extends BaseVideoProvider {
   constructor(config) {
     super('fal', config);
     this.apiKey = config.falKey;
-    this.defaultModel = config.videoModel || 'fal-ai/kling-video/v1.5/pro/image-to-video';
+    this.defaultModel = config.videoModel || 'fal-ai/wan/v2.2-a14b/image-to-video';
   }
 
   validateConfig() {
@@ -55,12 +55,26 @@ class FalVideoProvider extends BaseVideoProvider {
 
     // 1. Submit to Fal Queue
     const queueUrl = `https://queue.fal.run/${selectedModel}`;
-    const submitPayload = {
-      prompt: prompt || this.config.defaultMotionPrompt,
-      image_url: imageInput,
-      duration: `${this.config.videoDuration || 5}`,
-      aspect_ratio: this.config.videoAspectRatio || '9:16',
-    };
+    const isWan22 = selectedModel.toLowerCase().includes('wan/v2.2');
+    const submitPayload = isWan22
+      ? {
+          // Wan 2.2 uses frames rather than a duration field. 81 frames at
+          // 16fps yields the configured five-second kiosk clip.
+          prompt: prompt || this.config.defaultMotionPrompt,
+          image_url: imageInput,
+          num_frames: Math.min(161, Math.max(17, ((this.config.videoDuration || 5) * 16) + 1)),
+          frames_per_second: 16,
+          resolution: '720p',
+          aspect_ratio: this.config.videoAspectRatio || '9:16',
+          enable_prompt_expansion: true,
+          video_quality: 'high',
+        }
+      : {
+          prompt: prompt || this.config.defaultMotionPrompt,
+          image_url: imageInput,
+          duration: `${this.config.videoDuration || 5}`,
+          aspect_ratio: this.config.videoAspectRatio || '9:16',
+        };
 
     const submitRes = await axios.post(queueUrl, submitPayload, {
       headers: {

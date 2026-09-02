@@ -9,10 +9,10 @@
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #1D4ED8;
-      --primary-hover: #1E40AF;
-      --primary-gradient: linear-gradient(135deg, #1E3A8A 0%, #1D4ED8 35%, #2563EB 70%, #3B82F6 100%);
-      --wavy-gradient: linear-gradient(-45deg, #1E40AF, #2563EB, #3B82F6, #1D4ED8, #4F46E5);
+      --primary: #3D35F4;
+      --primary-hover: #2921C9;
+      --primary-gradient: linear-gradient(135deg, #5B35EF 0%, #4538F4 42%, #287BEC 100%);
+      --wavy-gradient: linear-gradient(-45deg, #6241ED, #3D35F4, #2486EC, #5A42E9, #8A5CF6);
       --surface: #FFFFFF;
       --bg-kiosk: #FFFFFF;
       --text-heading: #0F172A;
@@ -83,61 +83,267 @@
     /* =========================================================================
        DYNAMIC WAVY ANIMATED HEADER
        ========================================================================= */
+    /* Clean Floating White Header (Centered FRAME AI Title) */
     .header-bar {
-      width: 100%;
-      background: var(--wavy-gradient);
-      background-size: 300% 300%;
-      animation: waveHeaderShift 8s ease infinite;
-      color: #FFFFFF;
-      padding: clamp(16px, 2vh, 32px) clamp(20px, 4vw, 40px);
+      width: calc(100% - clamp(28px, 3.6vw, 40px));
+      margin: clamp(16px, 2vw, 22px) auto 0;
+      background: #FFFFFF;
+      color: #0F172A;
+      padding: clamp(14px, 2vh, 24px) clamp(20px, 4vw, 36px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-align: center;
+      border-radius: clamp(24px, 3.5vw, 36px);
+      box-shadow: 0 14px 34px rgba(40, 50, 105, 0.09);
+      border: 1px solid rgba(230, 232, 250, 0.85);
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .header-logo-badge {
       display: flex;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      border-bottom-left-radius: clamp(24px, 3.5vw, 42px);
-      border-bottom-right-radius: clamp(24px, 3.5vw, 42px);
-      box-shadow: 0 10px 30px rgba(29, 78, 216, 0.28);
-      flex-shrink: 0;
-      position: relative;
-      overflow: hidden;
+      gap: 14px;
+      margin: 0;
+      text-align: left;
     }
 
-    /* Subtle wavy glow light ray in header */
-    .header-bar::after {
-      content: '';
-      position: absolute;
-      top: -50%; left: -50%; width: 200%; height: 200%;
-      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 60%);
-      animation: waveRayPulse 6s ease-in-out infinite alternate;
-      pointer-events: none;
-    }
-
-    @keyframes waveHeaderShift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-
-    @keyframes waveRayPulse {
-      0% { transform: scale(0.9) rotate(0deg); opacity: 0.5; }
-      100% { transform: scale(1.1) rotate(15deg); opacity: 0.9; }
-    }
-
-    .header-title-text {
-      text-align: center;
-      z-index: 2;
-    }
-
-    .header-title-text h1 {
-      font-size: clamp(20px, 3.2vw, 32px);
-      font-weight: 900;
-      letter-spacing: 0.5px;
-      line-height: 1.1;
+    .header-cam-icon {
+      width: clamp(42px, 5vw, 54px);
+      height: clamp(42px, 5vw, 54px);
+      background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%);
+      border-radius: clamp(14px, 2vw, 20px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: clamp(22px, 2.5vw, 28px);
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.3);
       color: #FFFFFF;
     }
 
+    .header-title-text {
+      text-align: left;
+    }
+
+    .header-title-text h1 {
+      font-size: clamp(20px, 2.8vw, 30px);
+      font-weight: 900;
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+      color: #0F172A;
+    }
+
+    .header-title-text h1 .highlight-blue {
+      color: #2563EB;
+    }
+
     .header-title-text p {
-      font-size: clamp(12px, 1.6vw, 17px);
+      font-size: clamp(12px, 1.5vw, 16px);
+      font-weight: 700;
+      color: #64748B;
+      margin-top: 2px;
+    }
+
+    /* Grid Dots Matrix Decor on Header Right */
+    .header-grid-dots {
+      width: clamp(44px, 5vw, 58px);
+      height: clamp(44px, 5vw, 58px);
+      border: 1.5px solid #E1E4FA;
+      border-radius: 18px;
+      background-image: radial-gradient(#3D35F4 2.5px, transparent 2.7px);
+      background-size: 10px 10px;
+      background-position: 8px 8px;
+      opacity: 1;
+      flex-shrink: 0;
+    }
+
+    /* Camera Viewport Badges & Overlay (Matching Mockup) */
+    .camera-live-badge {
+      position: absolute;
+      top: 18px;
+      left: 18px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      font-weight: 800;
+      color: #0F172A;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+
+    .camera-live-badge .red-dot {
+      width: 8px;
+      height: 8px;
+      background: #2563EB;
+      border-radius: 50%;
+      box-shadow: 0 0 8px #2563EB;
+    }
+
+    .camera-switch-btn {
+      position: absolute;
+      top: 18px;
+      right: 18px;
+      width: 42px;
+      height: 42px;
+      background: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+      border-radius: 50%;
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      z-index: 10;
+    }
+
+    .camera-lighting-banner {
+      position: absolute;
+      bottom: 18px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(10px);
+      padding: 8px 20px;
+      border-radius: 999px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #1E293B;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      width: max-content;
+      max-width: 90%;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+      z-index: 10;
+    }
+
+    /* Quick Tools Grid Cards (Gallery / Flash) */
+    .quick-tools-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      width: 100%;
+      max-width: 680px;
+      margin-bottom: 16px;
+    }
+
+    .quick-tool-card {
+      background: #FFFFFF;
+      border: 1.5px solid #F1F5F9;
+      border-radius: 20px;
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      cursor: pointer;
+      position: relative;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    }
+
+    .quick-tool-card:hover {
+      border-color: #BFDBFE;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(37, 99, 235, 0.08);
+    }
+
+    .quick-tool-card .tool-icon {
+      font-size: 26px;
+    }
+
+    .quick-tool-card .tool-text {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+    }
+
+    .quick-tool-card .tool-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .quick-tool-card .tool-sub {
+      font-size: 12px;
+      font-weight: 600;
+      color: #64748B;
+    }
+
+    .quick-tool-card .auto-badge {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #2563EB;
+      color: #FFFFFF;
+      font-size: 10px;
+      font-weight: 800;
+      padding: 2px 8px;
+      border-radius: 999px;
+    }
+
+    /* Privacy First Card at Bottom */
+    .privacy-banner-card {
+      width: 100%;
+      max-width: 680px;
+      background: #FFFFFF;
+      border: 1.5px solid #F1F5F9;
+      border-radius: 22px;
+      padding: 16px 22px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-top: 16px;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.03);
+    }
+
+    .privacy-icon-box {
+      width: 44px;
+      height: 44px;
+      background: #EFF6FF;
+      border: 1.5px solid #BFDBFE;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      color: #2563EB;
+      flex-shrink: 0;
+    }
+
+    .privacy-text-box {
+      display: flex;
+      flex-direction: column;
+      text-align: left;
+      flex: 1;
+    }
+
+    .privacy-title {
+      font-size: 16px;
+      font-weight: 800;
+      color: #0F172A;
+    }
+
+    .privacy-sub {
+      font-size: 13px;
+      font-weight: 600;
+      color: #64748B;
+      line-height: 1.3;
+    }
+
+    .privacy-arrow {
+      font-size: 18px;
+      color: #2563EB;
+      font-weight: 800;
+    }
       font-weight: 600;
       opacity: 0.88;
       color: #DBEAFE;
@@ -379,6 +585,37 @@
       max-width: 100%;
     }
 
+    .gender-tab-btn {
+      flex: 1;
+      padding: clamp(10px, 1.4vh, 16px) clamp(14px, 2vw, 22px);
+      border-radius: 999px;
+      border: 2px solid #E2E8F0;
+      background: #FFFFFF;
+      color: #475569;
+      font-size: clamp(14px, 1.8vw, 20px);
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .gender-tab-btn:hover {
+      border-color: #93C5FD;
+      color: #1D4ED8;
+      transform: translateY(-2px);
+    }
+
+    .gender-tab-btn.active {
+      background: #2563EB;
+      color: #FFFFFF;
+      border-color: #2563EB;
+      box-shadow: 0 8px 24px rgba(37, 99, 235, 0.35);
+    }
+
     .frame-category-tag {
       font-size: clamp(11px, 1.4vw, 17px);
       font-weight: 700;
@@ -386,7 +623,11 @@
       margin-top: 2px;
     }
 
-    /* Round Arrow Action Button in each Frame Card */
+    /* Click animation for interactive elements */
+    button:active, .frame-card:active, .quiz-option-btn:active, .shutter-circle-btn:active, .gender-tab-btn:active {
+      transform: scale(0.94) !important;
+      transition: transform 0.06s ease !important;
+    }
     .frame-card-arrow-btn {
       width: clamp(34px, 4.4vw, 50px);
       height: clamp(34px, 4.4vw, 50px);
@@ -719,9 +960,9 @@
 
     .video-framed-card {
       width: 100%;
-      max-width: clamp(320px, 50vw, 600px);
-      aspect-ratio: 9 / 12;
-      max-height: clamp(280px, 38vh, 560px);
+      max-width: 760px;
+      aspect-ratio: 16 / 10;
+      max-height: none;
       border-radius: clamp(20px, 2.8vw, 36px);
       overflow: hidden;
       background: #000;
@@ -859,6 +1100,55 @@
       flex-shrink: 0;
     }
 
+    /* The production kiosk is designed on a 1080 × 1920 portrait canvas. */
+    .kiosk-container::after {
+      content: '';
+      position: absolute;
+      z-index: 0;
+      right: -12%;
+      bottom: -6%;
+      left: -12%;
+      height: 180px;
+      pointer-events: none;
+      background:
+        radial-gradient(80% 100% at 12% 100%, rgba(126, 109, 255, .32) 0 35%, transparent 36%),
+        radial-gradient(75% 100% at 54% 118%, rgba(88, 67, 246, .27) 0 37%, transparent 38%),
+        linear-gradient(180deg, transparent, rgba(222, 224, 255, .9));
+      border-radius: 50% 50% 0 0 / 45% 45% 0 0;
+    }
+
+    .viewport-content { z-index: 1; }
+
+    .download-action-btn {
+      transition: transform .18s ease, box-shadow .18s ease;
+    }
+
+    .download-action-btn:hover { transform: translateY(-2px); }
+
+    @media (min-width: 768px) and (min-height: 980px) {
+      .kiosk-container {
+        width: min(100vw, 1080px);
+        height: min(100dvh, 1920px);
+        min-height: 980px;
+        border-radius: 0;
+      }
+      .header-bar { margin-top: 22px; }
+      .header-cam-icon { width: 74px; height: 74px; font-size: 35px; border-radius: 22px; }
+      .header-title-text h1 { font-size: 39px; }
+      .header-title-text p { font-size: 19px; margin-top: 5px; }
+      .header-grid-dots { width: 68px; height: 68px; border-radius: 20px; background-size: 12px 12px; background-position: 10px 10px; }
+      #viewStep4, #viewStep5 { max-width: 820px; }
+      #viewStep4 .heading-box, #viewStep5 .heading-box { margin-top: 20px; }
+      #viewStep4 .heading-box h1, #viewStep5 .heading-box h1 { font-size: 48px !important; }
+      #viewStep4 .fun-quiz-card { max-width: 800px !important; padding: 28px 34px !important; border-color: #E2E1FF !important; }
+      #viewStep4 .quiz-option-btn { min-height: 70px; padding: 14px 25px; border-radius: 17px; }
+      #viewStep4 .rendering-progress-banner { max-width: 800px !important; min-height: 128px; border: 2px dashed #9A91FF !important; }
+      #viewStep5 .result-box { max-width: 760px !important; }
+      #viewStep5 .video-framed-card { max-width: 760px !important; margin-bottom: 24px !important; }
+      #viewStep5 .download-action-btn { min-height: 92px; padding: 18px 28px !important; }
+      #viewStep5 .qr-card-horizontal { min-height: 144px; padding: 18px 24px !important; }
+    }
+
     #fileUploadHidden {
       display: none;
     }
@@ -905,7 +1195,7 @@
       .frame-card-arrow-btn { width: 54px; height: 54px; font-size: 26px; }
 
       /* Camera / capture */
-      .camera-box-viewport { max-width: 680px; max-height: 600px; border-radius: 42px; margin-top: 64px; margin-bottom: 28px; }
+      .camera-box-viewport { max-width: 680px; max-height: 560px; border-radius: 42px; margin-top: 24px; margin-bottom: 24px; }
       .camera-box-viewport::before { border-radius: 46px; }
       .countdown-number     { font-size: 130px; }
       .capture-button-group { gap: 20px; max-width: 680px; margin-top: 10px; }
@@ -980,18 +1270,50 @@
       .pct-label { font-size: 26px !important; margin-bottom: 16px !important; }
       .magic-quote { font-size: 14px !important; padding: 12px 20px !important; border-radius: 14px !important; }
     }
+
+    /* 1080 × 1920 kiosk portrait mode. This comes after the compact browser
+       preview rules so DevTools device emulation retains the real kiosk scale. */
+    @media (min-width: 768px) and (max-aspect-ratio: 3 / 4) {
+      .kiosk-container { width: 100%; max-width: 1080px; height: 100dvh; min-height: 0; }
+      .header-bar { padding: 28px 38px !important; margin-top: 22px; }
+      .header-cam-icon { width: 72px !important; height: 72px !important; font-size: 34px !important; border-radius: 22px; }
+      .header-title-text h1 { font-size: 38px !important; }
+      .header-title-text p { font-size: 18px !important; }
+      .header-grid-dots { width: 64px; height: 64px; background-size: 12px 12px; background-position: 10px 10px; }
+
+      .viewport-content { padding: 46px 56px 72px !important; overflow-y: auto; }
+      .kiosk-screen { max-width: 900px; }
+      #viewStep4 { max-width: 860px; }
+      #viewStep4 .step-icon-badge { width: 104px !important; height: 104px !important; font-size: 52px !important; border-radius: 30px !important; margin-bottom: 22px !important; }
+      #viewStep4 .heading-box { margin-bottom: 32px !important; }
+      #viewStep4 .heading-box h1 { font-size: 54px !important; }
+      #viewStep4 .heading-box p { font-size: 23px !important; line-height: 1.45; }
+      #viewStep4 .fun-quiz-card { max-width: 860px !important; padding: 34px 40px !important; border-radius: 32px !important; margin-top: 22px !important; }
+      #viewStep4 .fun-quiz-card > div:first-child { font-size: 22px !important; margin-bottom: 16px !important; }
+      #viewStep4 .fun-quiz-card > div:nth-child(2) { font-size: 26px !important; margin-bottom: 26px !important; }
+      #viewStep4 .quiz-option-btn { min-height: 78px; font-size: 21px !important; padding: 16px 28px !important; border-radius: 18px !important; }
+      #viewStep4 #quizOptionsGroup { gap: 16px !important; }
+      #viewStep4 .rendering-progress-banner { max-width: 860px !important; min-height: 150px; margin-top: 26px !important; padding: 24px 30px !important; border-radius: 28px !important; }
+      #viewStep4 .rendering-progress-banner svg { width: 92px !important; height: 92px !important; }
+      #viewStep4 #labelPercentage { font-size: 21px !important; }
+      #viewStep4 #statusMessageText { font-size: 22px !important; }
+    }
   </style>
 </head>
 <body>
 
   <div class="kiosk-container">
 
-    <!-- Top Wavy Ambient Gradient Header -->
+    <!-- Floating brand header -->
     <div class="header-bar">
-      <div class="header-title-text">
-        <h1>FRAME AI</h1>
-        <p>AI Memory Creator</p>
+      <div class="header-logo-badge">
+        <div class="header-cam-icon">🎞️</div>
+        <div class="header-title-text">
+          <h1>FRAME <span class="highlight-blue">AI</span></h1>
+          <p>AI Memory Creator</p>
+        </div>
       </div>
+      <div class="header-grid-dots" aria-label="Menu"></div>
     </div>
 
     <!-- Main Viewport Content - Full Width & Vertically Centered -->
@@ -1030,21 +1352,16 @@
           <!-- Populated dynamically via /api/frames -->
         </div>
 
-        <!-- Continue button matching mockup — sits directly below frame grid -->
-        <button class="btn-main-action" id="btnStep1Continue" onclick="proceedFromStep1()" style="margin-top: 20px; margin-bottom: 8px;">
-          Continue →
-        </button>
-
       </div>
 
       <!-- ===================================================================
-           STEP 2: CAPTURE OR UPLOAD
+           STEP 2: CAPTURE OR UPLOAD (Matching Mockup UI)
            =================================================================== -->
       <div class="kiosk-screen" id="viewStep2">
         
         <div class="step-pill-badge">
-          <span class="dot"></span>
-          <span>Step 02 · Photo Capture</span>
+          <span style="font-size: 14px;">📷</span>
+          <span>STEP 02 · PHOTO CAPTURE</span>
         </div>
 
         <div class="heading-box">
@@ -1058,7 +1375,15 @@
           </div>
         </div>
 
+        <!-- Camera Viewport with Overlay Badges -->
         <div class="camera-box-viewport" id="viewportCameraBox">
+          <div class="camera-live-badge">
+            <span class="red-dot"></span> LIVE
+          </div>
+          <button class="camera-switch-btn" type="button" onclick="startWebcamLive()" title="Switch Camera">
+            📷
+          </button>
+
           <div class="flash-layer" id="flashLayerEffect"></div>
           <div class="countdown-number" id="countdownNumberText">3</div>
           <video id="liveWebcamTag" autoplay playsinline muted></video>
@@ -1069,25 +1394,38 @@
             <span style="font-size: clamp(56px, 8vw, 90px);">👤</span>
             <span style="font-size: clamp(16px, 2.2vw, 24px); font-weight: 700; color: #1E293B;">Take photo or upload from gallery</span>
           </div>
+
+          <div class="camera-lighting-banner">
+            <span>🔆</span> Good lighting improves best results
+          </div>
         </div>
 
-        <!-- Initial Actions -->
-        <div class="capture-button-group" id="initialActionButtons">
-          <button class="shutter-circle-btn" onclick="startWebcamLive()" title="Open Live Camera">
-            📷
+        <!-- Quick Tool Cards (Gallery / Flash) -->
+        <div class="quick-tools-grid" id="quickToolsRow">
+          <button type="button" class="quick-tool-card" onclick="document.getElementById('fileUploadHidden').click()">
+            <span class="tool-icon">🖼️</span>
+            <div class="tool-text">
+              <span class="tool-title">Gallery</span>
+              <span class="tool-sub">Choose from photos</span>
+            </div>
           </button>
-          <div class="or-label">OR</div>
-          <button class="gallery-btn" onclick="document.getElementById('fileUploadHidden').click()">
-            <span>📤</span> Upload from Gallery
+
+          <button type="button" class="quick-tool-card">
+            <span class="auto-badge">Auto</span>
+            <span class="tool-icon" style="color: #2563EB;">⚡</span>
+            <div class="tool-text">
+              <span class="tool-title">Flash</span>
+              <span class="tool-sub">Auto</span>
+            </div>
           </button>
         </div>
 
-        <!-- Live Camera Controls -->
-        <div class="live-camera-snap-group" id="controlsLiveCamera">
-          <button class="btn-main-action" style="flex: 2;" onclick="startSnapCountdown()">
-            📸 Snap (3s)
+        <!-- Primary Action Buttons (Snap 3s / Cancel) -->
+        <div class="live-camera-snap-group" id="controlsLiveCamera" style="display: flex; gap: 16px; width: 100%; max-width: 680px;">
+          <button class="btn-main-action" style="flex: 2; margin-top: 0; background: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%);" onclick="startSnapCountdown()">
+            📷 Snap (3s)
           </button>
-          <button class="btn-sub-action" style="flex: 1; margin-top: 0;" onclick="cancelWebcamLive()">
+          <button class="btn-sub-action" style="flex: 1; margin-top: 0; background: #FFFFFF; border: 1.5px solid #DBEAFE; color: #2563EB;" onclick="cancelWebcamLive()">
             Cancel
           </button>
         </div>
@@ -1101,6 +1439,16 @@
           <button class="btn-sub-action" onclick="resetPhotoState()">
             🔄 Retake / Change Photo
           </button>
+        </div>
+
+        <!-- Privacy First Card at Bottom (Matching Mockup media_1788321618654.png) -->
+        <div class="privacy-banner-card">
+          <div class="privacy-icon-box">🛡️</div>
+          <div class="privacy-text-box">
+            <div class="privacy-title">Privacy First</div>
+            <div class="privacy-sub">Your photos are private and secure. We never store without your permission.</div>
+          </div>
+          <div class="privacy-arrow">❯</div>
         </div>
       </div>
 
@@ -1168,54 +1516,65 @@
       </div>
 
       <!-- ===================================================================
-           STEP 4: FUN AI MEMORY QUIZ SLIDER (Shows while video finishes in background)
+           STEP 4: FUN AI MEMORY QUIZ SLIDER (Matching Mockup media_1788322609207.png)
            =================================================================== -->
       <div class="kiosk-screen" id="viewStep4">
         
-        <div class="step-icon-badge" style="background:#EFF6FF; border-color:#BFDBFE; color:#1D4ED8;">
+        <div class="step-icon-badge" style="background:#EFF6FF; border:1.5px solid #BFDBFE; color:#2563EB; width:64px; height:64px; font-size:32px; border-radius:22px; margin-bottom:14px;">
           🎮
         </div>
 
         <div class="heading-box" style="margin-bottom: 20px;">
-          <h1 style="margin-bottom: 6px;">Fun AI <span class="highlight">Quiz</span> ⚡</h1>
-          <p style="font-size: clamp(16px, 2.2vw, 24px);">Play a quick quiz while your video finishes in the background!</p>
+          <h1 style="margin-bottom: 6px;">Fun AI <span class="highlight-blue" style="color:#2563EB;">Quiz</span> ⚡</h1>
+          <p style="font-size: clamp(15px, 2vw, 22px); color:#64748B;">Play a quick quiz while your video finishes in the background!</p>
         </div>
 
-        <div class="progress-box" style="padding: 0; width: 100%;">
+        <div class="progress-box" style="padding: 0; width: 100%; display:flex; flex-direction:column; align-items:center;">
           
           <!-- Interactive Fun AI Memory Quiz Card 1 -->
-          <div class="fun-quiz-card" id="quizCardContainer" style="margin-top: 0; width: 100%; max-width: 720px; padding: 26px 30px;">
-            <div style="font-size: clamp(17px, 2.2vw, 24px); font-weight: 800; color: #1D4ED8; margin-bottom: 10px;">
+          <div class="fun-quiz-card" id="quizCardContainer" style="margin-top: 0; width: 100%; max-width: 680px; padding: 22px 26px; background:#FFFFFF; border:1.5px solid #F1F5F9; border-radius:24px;">
+            <div style="font-size: 14px; font-weight: 800; color: #2563EB; margin-bottom: 8px;">
               ✨ Question 1 of 2:
             </div>
-            <div id="quizQuestionText" style="font-size: clamp(16px, 2vw, 22px); font-weight: 800; color: #0F172A; margin-bottom: 18px;">
+            <div id="quizQuestionText" style="font-size: 17px; font-weight: 800; color: #0F172A; margin-bottom: 16px;">
               Pick the mood of your cinematic memory:
             </div>
-            <div id="quizOptionsGroup" style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+            <div id="quizOptionsGroup" style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
               <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Cinematic Blockbuster 🎬')">🎬 Cinematic Blockbuster</button>
-              <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Royal Elegance 👑')">👑 Royal Elegance</button>
+              <button type="button" class="quiz-option-btn selected" style="background:#2563EB; color:#FFFFFF; border-color:#2563EB;" onclick="selectQuizOption(this, 'Royal Elegance 👑')">👑 Royal Elegance ✓</button>
               <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Pure Magic 🌟')">🌟 Pure Magic</button>
               <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Retro Vintage 🎞️')">🎞️ Retro Vintage</button>
             </div>
           </div>
 
           <!-- Interactive Fun AI Memory Quiz Card 2 -->
-          <div class="fun-quiz-card" style="margin-top: 18px; width: 100%; max-width: 720px; padding: 26px 30px;">
-            <div style="font-size: clamp(17px, 2.2vw, 24px); font-weight: 800; color: #1D4ED8; margin-bottom: 10px;">
+          <div class="fun-quiz-card" style="margin-top: 14px; width: 100%; max-width: 680px; padding: 22px 26px; background:#FFFFFF; border:1.5px solid #F1F5F9; border-radius:24px;">
+            <div style="font-size: 14px; font-weight: 800; color: #2563EB; margin-bottom: 8px;">
               🎵 Question 2 of 2:
             </div>
-            <div style="font-size: clamp(16px, 2vw, 22px); font-weight: 800; color: #0F172A; margin-bottom: 18px;">
+            <div style="font-size: 17px; font-weight: 800; color: #0F172A; margin-bottom: 16px;">
               What theme music best fits your style?
             </div>
-            <div style="display:flex; justify-content:center; gap:12px; flex-wrap:wrap;">
+            <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
               <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Pop Hits 🎸')">🎸 Pop Hits</button>
               <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Orchestral Strings 🎻')">🎻 Orchestral Strings</button>
               <button type="button" class="quiz-option-btn" onclick="selectQuizOption(this, 'Lo-Fi Chill Beats 🎧')">🎧 Lo-Fi Beats</button>
             </div>
           </div>
 
-          <div id="quizFeedbackText" style="display:none; font-size: clamp(16px, 2.2vw, 22px); font-weight: 800; color: #059669; margin-top: 18px; text-align: center;">
-            Awesome pick! Your AI video is rendering in background... 🎉
+          <!-- Circular Percentage Progress Banner (Matching Mockup media_1788322609207.png) -->
+          <div class="rendering-progress-banner" style="display:flex; align-items:center; gap:18px; width:100%; max-width:680px; background:#FFFFFF; border:1.5px solid #DBEAFE; border-radius:24px; padding:16px 22px; margin-top:16px; box-shadow:0 4px 14px rgba(37,99,235,0.06);">
+            <div style="position:relative; width:64px; height:64px; flex-shrink:0;">
+              <svg width="64" height="64" viewBox="0 0 64 64">
+                <circle cx="32" cy="32" r="26" fill="none" stroke="#EFF6FF" stroke-width="6"/>
+                <circle id="fillProgressBarCircle" cx="32" cy="32" r="26" fill="none" stroke="#2563EB" stroke-width="6" stroke-dasharray="163" stroke-dashoffset="45" stroke-linecap="round"/>
+              </svg>
+              <span id="labelPercentage" style="position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); font-size:15px; font-weight:900; color:#1D4ED8;">72%</span>
+            </div>
+            <div style="display:flex; flex-direction:column; text-align:left;">
+              <span id="statusMessageText" style="font-size:16px; font-weight:800; color:#0F172A;">Your AI video is rendering magic... 🎉</span>
+              <span style="font-size:13px; color:#64748B; font-weight:600; margin-top:2px;">Almost there! Please wait a moment.</span>
+            </div>
           </div>
 
         </div>
@@ -1223,41 +1582,76 @@
       </div>
 
       <!-- ===================================================================
-           STEP 5: PREVIEW & QR CODE
+           STEP 5: PREVIEW & QR CODE (Matching Mockup media_1788322609246.png)
            =================================================================== -->
       <div class="kiosk-screen" id="viewStep5">
         
-        <div class="step-pill-badge">
-          <span class="dot"></span>
-          <span>Step 05 · Ready to Share</span>
+        <div class="step-pill-badge" style="background:#EFF6FF; border:1.5px solid #DBEAFE; color:#2563EB;">
+          <span style="width:8px; height:8px; background:#2563EB; border-radius:50%; display:inline-block;"></span>
+          <span>STEP 05 · READY TO SHARE</span>
         </div>
 
-        <div class="heading-box">
-          <h1>Your Video is <span class="highlight">Ready!</span> 🎉</h1>
-          <p>Preview, download & share your beautiful memory</p>
+        <div class="heading-box" style="margin-bottom: 20px;">
+          <h1 style="margin-bottom: 6px;">Your Video is <span class="highlight-blue" style="color:#2563EB;">Ready!</span> 🎉</h1>
+          <p style="font-size: clamp(15px, 2vw, 22px); color:#64748B;">Preview, download & share your beautiful memory</p>
         </div>
 
-        <div class="result-box">
-          <div class="video-framed-card">
-            <video id="videoFramedOutput" controls autoplay loop playsinline></video>
+        <div class="result-box" style="width:100%; max-width:680px;">
+          <!-- Video Card -->
+          <div class="video-framed-card" style="width:100%; border-radius:28px; overflow:hidden; box-shadow:0 12px 36px rgba(0,0,0,0.12); margin-bottom:20px;">
+            <video id="videoFramedOutput" controls autoplay loop playsinline style="width:100%; height:100%; object-fit:cover;"></video>
           </div>
 
-          <a id="btnDownloadVideo" class="btn-main-action" download>
-            <span>⬇️</span> Download Video
+          <!-- Download Video Button -->
+          <a id="btnDownloadVideo" class="download-action-btn primary-btn" download style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:18px 24px; background:linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%); border-radius:20px; color:#FFFFFF; text-decoration:none; box-shadow:0 8px 24px rgba(37, 99, 235, 0.3); margin-bottom:14px;">
+            <div style="display:flex; align-items:center; gap:16px;">
+              <div style="width:46px; height:46px; background:rgba(255,255,255,0.2); border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px;">⬇️</div>
+              <div style="display:flex; flex-direction:column; text-align:left;">
+                <span style="font-size:18px; font-weight:800;">Download Video</span>
+                <span style="font-size:13px; opacity:0.85; font-weight:600;">MP4 · High Quality</span>
+              </div>
+            </div>
+            <div style="width:36px; height:36px; background:rgba(255,255,255,0.25); border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800;">➔</div>
           </a>
 
-          <a id="btnDownloadPhoto" class="btn-sub-action" download>
-            <span>🖼️</span> Download Image
+          <!-- Download Image Button -->
+          <a id="btnDownloadPhoto" class="download-action-btn secondary-btn" download style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:18px 24px; background:#FFFFFF; border:1.5px solid #DBEAFE; border-radius:20px; color:#1E293B; text-decoration:none; box-shadow:0 4px 14px rgba(0,0,0,0.03); margin-bottom:20px;">
+            <div style="display:flex; align-items:center; gap:16px;">
+              <div style="width:46px; height:46px; background:#EFF6FF; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; color:#2563EB;">🖼️</div>
+              <div style="display:flex; flex-direction:column; text-align:left;">
+                <span style="font-size:18px; font-weight:800; color:#0F172A;">Download Image</span>
+                <span style="font-size:13px; color:#64748B; font-weight:600;">JPG · High Quality</span>
+              </div>
+            </div>
+            <div style="width:36px; height:36px; background:#EFF6FF; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#2563EB;">➔</div>
           </a>
 
-          <div class="qr-container">
-            <div style="font-size: clamp(16px, 2.2vw, 24px); font-weight: 800; color: #0F172A;">Scan to Download on Mobile</div>
-            <img id="imgQrCode" class="qr-image" alt="Scan QR Code" />
-            <div style="font-size: clamp(13px, 1.6vw, 18px); color: var(--text-muted); font-weight: 700;">Scan this QR code to download on your device</div>
+          <!-- Divider OR -->
+          <div style="display:flex; align-items:center; width:100%; margin:16px 0 20px;">
+            <div style="flex:1; height:1px; background:#E2E8F0;"></div>
+            <span style="padding:4px 14px; background:#F8FAFC; border:1px solid #E2E8F0; border-radius:999px; font-size:12px; font-weight:800; color:#64748B;">OR</span>
+            <div style="flex:1; height:1px; background:#E2E8F0;"></div>
           </div>
 
-          <button class="btn-sub-action" style="margin-top: 18px;" onclick="resetKioskFlow()">
-            🔄 Create Another Video
+          <!-- QR Code Card (Matching Mockup media_1788322609246.png) -->
+          <div class="qr-card-horizontal" style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:20px 24px; background:#FFFFFF; border:1.5px solid #F1F5F9; border-radius:24px; box-shadow:0 4px 14px rgba(0,0,0,0.03); margin-bottom:20px;">
+            <div style="display:flex; align-items:center; gap:20px;">
+              <img id="imgQrCode" class="qr-image" alt="Scan QR Code" style="width:100px; height:100px; border-radius:16px; border:1px solid #E2E8F0;" />
+              <div style="display:flex; flex-direction:column; text-align:left;">
+                <span style="font-size:17px; font-weight:800; color:#0F172A;">Scan to Download on Mobile</span>
+                <span style="font-size:13px; color:#64748B; font-weight:600; margin-top:4px; max-width:240px;">Scan this QR code to download on your device</span>
+              </div>
+            </div>
+            <div style="width:42px; height:42px; background:#EFF6FF; border:1.5px solid #BFDBFE; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:20px; color:#2563EB; flex-shrink:0;">📱</div>
+          </div>
+
+          <!-- Create Another Video Button -->
+          <button class="download-action-btn secondary-btn" style="display:flex; align-items:center; justify-content:space-between; width:100%; padding:18px 24px; background:#FFFFFF; border:1.5px solid #DBEAFE; border-radius:20px; color:#2563EB; cursor:pointer; box-shadow:0 4px 14px rgba(0,0,0,0.03);" onclick="resetKioskFlow()">
+            <div style="display:flex; align-items:center; gap:16px;">
+              <div style="width:46px; height:46px; background:#EFF6FF; border-radius:14px; display:flex; align-items:center; justify-content:center; font-size:22px; color:#2563EB;">🎬</div>
+              <span style="font-size:18px; font-weight:800; color:#2563EB;">Create Another Video</span>
+            </div>
+            <div style="width:36px; height:36px; background:#EFF6FF; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:18px; font-weight:800; color:#2563EB;">➔</div>
           </button>
         </div>
       </div>
@@ -1277,12 +1671,36 @@
     let activeJobId = null;
     let isJobCompleted = false;
 
-    const frameCategories = {
-      'frame-vintage-floral': 'Romance',
-      'frame-royal-gold': 'Elegance',
-      'frame-pink-rose': 'Charm',
-      'frame-midnight-gold': 'Luxury'
-    };
+    let allFetchedFrames = [];
+    // Keep this portrait kiosk intentionally simple: four selectable roles fit
+    // on the screen, so guests never have to scroll through duplicate cards.
+    const kioskRoleLimit = 4;
+
+    // Web Audio Synthesizer for tactile click sound effect
+    function playClickSound() {
+      try {
+        const AudioCtx = window.AudioContext || window.webkitAudioContext;
+        if (!AudioCtx) return;
+        const ctx = new AudioCtx();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(750, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(250, ctx.currentTime + 0.04);
+        gain.gain.setValueAtTime(0.25, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.04);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.04);
+      } catch (e) {}
+    }
+
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('button, .frame-card, .quiz-option-btn, .shutter-circle-btn, .gender-tab-btn, a')) {
+        playClickSound();
+      }
+    });
 
     // ----------------------------------------------------------------
     // 1. Fetch frames
@@ -1291,49 +1709,66 @@
       try {
         const res = await fetch('/api/frames');
         const json = await res.json();
-        const container = document.getElementById('containerFramesGrid');
-        container.innerHTML = '';
 
         if (json.data && json.data.length > 0) {
-          json.data.forEach((frame, idx) => {
-            const card = document.createElement('div');
-            card.className = `frame-card ${idx === 0 ? 'active-selected' : ''}`;
-
-            card.onclick = (e) => {
-              if (e.target.classList.contains('frame-card-arrow-btn') || e.target.closest('.frame-card-arrow-btn')) {
-                onSelectAndProceedFrame(frame.frameId, card);
-              } else {
-                onSelectFrame(frame.frameId, card);
-              }
-            };
-
-            const categoryTag = frameCategories[frame.frameId] || 'Style';
-
-            card.innerHTML = `
-              <div class="frame-selected-pill">✓ Selected</div>
-              <div class="frame-img-container">
-                <img src="${frame.previewUrl}" alt="${frame.name}" />
-              </div>
-              <div class="frame-card-bottom-row">
-                <div class="frame-text-info">
-                  <div class="frame-name-h3">${frame.name}</div>
-                  <div class="frame-category-tag">${categoryTag}</div>
-                </div>
-                <div class="frame-card-arrow-btn" title="Select & Continue">
-                  ➔
-                </div>
-              </div>
-            `;
-            container.appendChild(card);
-
-            if (idx === 0) {
-              chosenFrameId = frame.frameId;
-            }
-          });
+          allFetchedFrames = json.data;
+          renderFramesGrid();
         }
       } catch (err) {
         console.error('Error fetching frames:', err);
       }
+    }
+
+    function renderFramesGrid() {
+      const container = document.getElementById('containerFramesGrid');
+      if (!container) return;
+      container.innerHTML = '';
+
+      const filtered = allFetchedFrames
+        .slice()
+        .sort((a, b) => (a.order || 0) - (b.order || 0))
+        .filter(frame => frame.category !== 'Women')
+        .slice(0, kioskRoleLimit);
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:30px; font-weight:700; color:#64748B;">No templates found for this filter.</div>';
+        return;
+      }
+
+      filtered.forEach((frame, idx) => {
+        const card = document.createElement('div');
+        const isSelected = chosenFrameId ? (frame.frameId === chosenFrameId) : (idx === 0);
+
+        if (isSelected) {
+          chosenFrameId = frame.frameId;
+        }
+
+        card.className = `frame-card ${isSelected ? 'active-selected' : ''}`;
+
+        // Tapping a card selects it. The arrow is the deliberate “next” action.
+        card.onclick = () => onSelectFrame(frame.frameId, card);
+
+        card.innerHTML = `
+          <div class="frame-selected-pill">✓ Selected</div>
+          <div class="frame-img-container">
+            <img src="${frame.previewUrl}" alt="${frame.name}" onerror="this.onerror=null; this.src='/uploads/frames/role-engineer-male_preview.png';" />
+          </div>
+          <div class="frame-card-bottom-row">
+            <div class="frame-text-info">
+              <div class="frame-name-h3">${frame.name}</div>
+              <div class="frame-category-tag">Professional Role</div>
+            </div>
+            <button type="button" class="frame-card-arrow-btn" title="Select ${frame.name} and continue" aria-label="Select ${frame.name} and continue">
+              ➔
+            </button>
+          </div>
+        `;
+        card.querySelector('.frame-card-arrow-btn').onclick = (event) => {
+          event.stopPropagation();
+          onSelectAndProceedFrame(frame.frameId, card);
+        };
+        container.appendChild(card);
+      });
     }
 
     function onSelectFrame(frameId, cardElem) {
@@ -1366,6 +1801,12 @@
 
       document.querySelectorAll('.kiosk-screen').forEach(s => s.classList.remove('active'));
       document.getElementById(`viewStep${stepNum}`).classList.add('active');
+
+      if (stepNum === 2) {
+        if (!webcamStream && !photoBlob) {
+          setTimeout(startWebcamLive, 100);
+        }
+      }
 
       if (stepNum === 3 && photoBlobUrl) {
         const preview = document.getElementById('step3PhotoPreview');
@@ -1406,14 +1847,16 @@
         const video = document.getElementById('liveWebcamTag');
         video.srcObject = webcamStream;
         video.style.display = 'block';
+        video.play().catch(e => console.warn('Camera play error:', e));
 
         document.getElementById('portraitPhotoImg').style.display = 'none';
         document.getElementById('promptPlaceholderBox').style.display = 'none';
-        document.getElementById('initialActionButtons').style.display = 'none';
-        document.getElementById('controlsLiveCamera').style.display = 'flex';
+        const initialBtns = document.getElementById('initialActionButtons');
+        if (initialBtns) initialBtns.style.display = 'none';
+        const controlsCam = document.getElementById('controlsLiveCamera');
+        if (controlsCam) controlsCam.style.display = 'flex';
       } catch (err) {
-        console.warn('Direct webcam unavailable, opening file picker:', err);
-        document.getElementById('fileUploadHidden').click();
+        console.warn('Direct webcam unavailable or permission denied:', err);
       }
     }
 
@@ -1629,10 +2072,14 @@
 
           const data = json.data;
           const p = data.progress || 15;
-          const bar = document.getElementById('fillProgressBar');
           const lbl = document.getElementById('labelPercentage');
-          if (bar) bar.style.width = `${p}%`;
           if (lbl) lbl.innerText = `${p}%`;
+
+          const circle = document.getElementById('fillProgressBarCircle');
+          if (circle) {
+            const dashoffset = 163 - (163 * (p / 100));
+            circle.style.strokeDashoffset = dashoffset;
+          }
 
           if (data.statusMessage) {
             const msg = document.getElementById('statusMessageText');
@@ -1712,4 +2159,3 @@
   </script>
 </body>
 </html>
-

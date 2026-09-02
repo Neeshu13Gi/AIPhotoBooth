@@ -16,13 +16,18 @@ const generationJobSchema = new mongoose.Schema(
       },
       email: {
         type: String,
-        required: true,
+        // A generation starts as soon as the user captures or uploads a
+        // photo. Email is collected on the following details screen.
+        required: false,
+        default: '',
         trim: true,
         lowercase: true,
       },
       phone: {
         type: String,
-        required: true,
+        // See email above: this is intentionally completed later.
+        required: false,
+        default: '',
         trim: true,
       },
       occasion: {
@@ -202,7 +207,7 @@ class GenerationJobProxy {
     return { acknowledged: true, modifiedCount: 0 };
   }
 
-  static async find(filter = {}) {
+  static find(filter = {}) {
     if (this.isMongoConnected()) {
       return MongooseJobModel.find(filter);
     }

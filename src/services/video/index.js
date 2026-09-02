@@ -5,6 +5,7 @@ const ReplicateVideoProvider = require('./replicateProvider');
 const RunwayVideoProvider = require('./runwayProvider');
 const KlingVideoProvider = require('./klingProvider');
 const LumaVideoProvider = require('./lumaProvider');
+const HuggingFaceVideoProvider = require('./huggingFaceProvider');
 
 class VideoProviderFactory {
   static getProvider(customProviderName = null) {
@@ -13,6 +14,9 @@ class VideoProviderFactory {
     switch (providerName) {
       case 'fal':
         return new FalVideoProvider(config);
+      case 'huggingface':
+      case 'hf':
+        return new HuggingFaceVideoProvider(config);
       case 'replicate':
         return new ReplicateVideoProvider(config);
       case 'runway':
@@ -35,7 +39,7 @@ class VideoProviderFactory {
       configuredModel: config.videoModel,
       isValid: validation.valid,
       validationError: validation.error || null,
-      supportedProviders: ['mock', 'fal', 'replicate', 'runway', 'kling', 'luma'],
+      supportedProviders: ['mock', 'huggingface', 'fal', 'replicate', 'runway', 'kling', 'luma'],
     };
   }
 }

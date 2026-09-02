@@ -5,8 +5,6 @@ const VideoProviderFactory = require('./video');
 const FrameCompositor = require('./frameCompositor');
 const QRService = require('./qrService');
 const config = require('../config/env');
-const path = require('path');
-const fs = require('fs');
 
 class QueueService {
   /**
@@ -24,21 +22,12 @@ class QueueService {
     }
 
     try {
-      // 1. Fetch frame data if not embedded
-      let frameOverlayPath = null;
-      const frame = await Frame.findOne({ frameId: job.frameId });
-      if (frame) {
-        // Derive local frame path
-        const overlayFileName = path.basename(frame.overlayUrl);
-        frameOverlayPath = path.join(config.framesDir, overlayFileName);
-      }
-
-      // 2. Generate QR Code
+      // 1. Generate QR Code
       const qrResult = await QRService.generateQRCode(jobId);
       job.qrCodeUrl = qrResult.qrCodeUrl;
       job.shareUrl = qrResult.shareUrl;
 
-      // 3. Initiate Video Generation
+      // 2. Initiate Video Generation
       job.status = 'generating_video';
       job.progress = 10;
       job.statusMessage = 'Starting AI video generation engine...';
@@ -48,10 +37,19 @@ class QueueService {
       job.provider = provider.name;
       job.model = config.videoModel;
 
-      // Compose final prompt using frame modifier + occasion + user prompt
-      const promptParts = [config.defaultMotionPrompt];
+      // The camera or uploaded image is always the identity reference. The
+      // selected frame supplies the requested character, never a replacement face.
+      const selectedCharacter = job.frameSnapshot?.name || 'professional character';
+      const promptParts = [
+        'Create a full-screen, vertical 9:16 realistic professional avatar video from the provided user photo.',
+        `The user is the ${selectedCharacter}; use their exact recognizable face and identity as the only face in the video.`,
+        'Transform their clothing, props, and environment for the selected role while preserving natural facial features, face shape, skin tone, and hairstyle.',
+        'Use a medium portrait shot with natural studio-quality lighting, realistic proportions, and a clean cinematic background.',
+        'The person looks into the camera and speaks naturally with subtle, believable lip movement, blinking, gentle facial expressions, and slight head movement.',
+        'Do not use any other person, face swap template, collage, border, text, watermark, or decorative frame.',
+      ];
       if (job.frameSnapshot?.promptModifier) {
-        promptParts.push(job.frameSnapshot.promptModifier);
+        promptParts.push(`Character styling: ${job.frameSnapshot.promptModifier}.`);
       }
       if (job.userDetails?.occasion) {
         promptParts.push(`celebrating ${job.userDetails.occasion}`);
@@ -93,20 +91,18 @@ class QueueService {
       job.rawVideoPath = videoResult.videoPath;
       job.status = 'compositing_frame';
       job.progress = 85;
-      job.statusMessage = 'Framing your video with selected theme...';
+      job.statusMessage = 'Preparing your full-screen avatar video...';
       await job.save();
 
-      // 4. Overlay Decorative Frame on Video and Photo
+      // The model output is the final full-screen avatar. Do not cover it
+      // with the selected-card artwork; the card is only a role prompt.
       const [framedVideoRes, framedImageRes] = await Promise.all([
         FrameCompositor.compositeVideoWithFrame({
           videoPath: videoResult.videoPath,
-          frameOverlayPath,
+          frameOverlayPath: null,
           onProgress,
         }),
-        FrameCompositor.compositeImageWithFrame({
-          imagePath: job.inputImagePath,
-          frameOverlayPath,
-        }),
+        FrameCompositor.extractVideoPoster({ videoPath: videoResult.videoPath }),
       ]);
 
       job.framedVideoUrl = framedVideoRes.framedVideoUrl;
@@ -114,7 +110,7 @@ class QueueService {
       job.framedImageUrl = framedImageRes.framedImageUrl;
       job.framedImagePath = framedImageRes.framedImagePath;
 
-      // 5. Mark Completed
+      // 3. Mark Completed
       const processingTimeMs = Date.now() - startTime;
       job.status = 'completed';
       job.progress = 100;

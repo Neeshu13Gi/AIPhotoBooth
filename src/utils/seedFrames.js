@@ -17,210 +17,198 @@ async function generateFrameAssets() {
   const width = 1080;
   const height = 1920;
 
-  // Frame 1: Vintage Floral Romance (Emerald Leaf Garland & Ivory Rose Blossoms)
-  const floralSvg = `
+  // Helper SVG builder for professional role swap avatars matching mockup
+  const createRoleSvg = (title, gender, outfitColor, bgGradient, accessorySvg) => `
     <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
       <defs>
-        <linearGradient id="goldFiligree" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#E2BA6E" />
-          <stop offset="30%" stop-color="#FBF3D5" />
-          <stop offset="70%" stop-color="#C59B42" />
-          <stop offset="100%" stop-color="#8C6721" />
+        <linearGradient id="bg_${title}_${gender}" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="${bgGradient[0]}" />
+          <stop offset="100%" stop-color="${bgGradient[1]}" />
         </linearGradient>
-        <linearGradient id="roseGarland" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#F472B6" />
-          <stop offset="50%" stop-color="#E11D48" />
-          <stop offset="100%" stop-color="#9F1239" />
+        <linearGradient id="suit_${title}_${gender}" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="${outfitColor[0]}" />
+          <stop offset="100%" stop-color="${outfitColor[1]}" />
         </linearGradient>
+        <filter id="shadow_${title}" x="-10%" y="-10%" width="120%" height="120%">
+          <feDropShadow dx="0" dy="12" stdDeviation="16" flood-opacity="0.15"/>
+        </filter>
       </defs>
-      
-      <!-- Outer Double Border with Gold Trim -->
-      <rect x="28" y="28" width="${width - 56}" height="${height - 56}" rx="48" fill="none" stroke="url(#goldFiligree)" stroke-width="14"/>
-      <rect x="52" y="52" width="${width - 104}" height="${height - 104}" rx="36" fill="none" stroke="#2D5A27" stroke-width="4" stroke-dasharray="14,10"/>
-      <rect x="68" y="68" width="${width - 136}" height="${height - 136}" rx="28" fill="none" stroke="url(#goldFiligree)" stroke-width="3"/>
 
-      <!-- Top & Bottom Botanical Garlands -->
-      <path d="M 90 60 Q ${width / 2} 18, ${width - 90} 60" fill="none" stroke="#2D5A27" stroke-width="16" stroke-linecap="round"/>
-      <path d="M 90 ${height - 60} Q ${width / 2} ${height - 18}, ${width - 90} ${height - 60}" fill="none" stroke="#2D5A27" stroke-width="16" stroke-linecap="round"/>
+      <!-- Office / Studio Background -->
+      <rect width="100%" height="100%" fill="url(#bg_${title}_${gender})"/>
 
-      <!-- Corner Floral Bouquets (Top-Left) -->
-      <circle cx="95" cy="95" r="48" fill="#FFF1F2" stroke="#E11D48" stroke-width="4"/>
-      <circle cx="95" cy="95" r="30" fill="url(#roseGarland)"/>
-      <circle cx="95" cy="95" r="15" fill="#FFE4E6"/>
-      <circle cx="140" cy="75" r="24" fill="#F472B6"/>
-      <circle cx="75" cy="140" r="24" fill="#FDA4AF"/>
+      <!-- Ambient Architectural Office Grid Lines -->
+      <line x1="0" y1="400" x2="${width}" y2="400" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+      <line x1="0" y1="800" x2="${width}" y2="800" stroke="rgba(255,255,255,0.2)" stroke-width="2"/>
+      <line x1="300" y1="0" x2="300" y2="${height}" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
+      <line x1="780" y1="0" x2="780" y2="${height}" stroke="rgba(255,255,255,0.15)" stroke-width="2"/>
 
-      <!-- Corner Floral Bouquets (Top-Right) -->
-      <circle cx="${width - 95}" cy="95" r="48" fill="#FFF1F2" stroke="#E11D48" stroke-width="4"/>
-      <circle cx="${width - 95}" cy="95" r="30" fill="url(#roseGarland)"/>
-      <circle cx="${width - 95}" cy="95" r="15" fill="#FFE4E6"/>
-      <circle cx="${width - 140}" cy="75" r="24" fill="#F472B6"/>
-      <circle cx="${width - 75}" cy="140" r="24" fill="#FDA4AF"/>
+      <!-- Professional Figure Silhouette / Body -->
+      <g filter="url(#shadow_${title})">
+        <!-- Shoulders / Torso -->
+        <path d="M 180 1920 C 180 1150, 320 1000, 540 1000 C 760 1000, 900 1150, 900 1920 Z" fill="url(#suit_${title}_${gender})"/>
+        
+        <!-- Shirt Collar / V-Neck -->
+        <polygon points="540,1040 450,1220 630,1220" fill="#FFFFFF"/>
+        <polygon points="540,1100 480,1240 600,1240" fill="${outfitColor[2] || '#1E293B'}"/>
 
-      <!-- Corner Floral Bouquets (Bottom-Left) -->
-      <circle cx="95" cy="${height - 95}" r="48" fill="#FFF1F2" stroke="#E11D48" stroke-width="4"/>
-      <circle cx="95" cy="${height - 95}" r="30" fill="url(#roseGarland)"/>
-      <circle cx="95" cy="${height - 95}" r="15" fill="#FFE4E6"/>
-      <circle cx="140" cy="${height - 75}" r="24" fill="#F472B6"/>
-      <circle cx="75" cy="${height - 140}" r="24" fill="#FDA4AF"/>
+        <!-- Neck -->
+        <rect x="470" y="850" width="140" height="200" rx="30" fill="#E5C3A6"/>
 
-      <!-- Corner Floral Bouquets (Bottom-Right) -->
-      <circle cx="${width - 95}" cy="${height - 95}" r="48" fill="#FFF1F2" stroke="#E11D48" stroke-width="4"/>
-      <circle cx="${width - 95}" cy="${height - 95}" r="30" fill="url(#roseGarland)"/>
-      <circle cx="${width - 95}" cy="${height - 95}" r="15" fill="#FFE4E6"/>
-      <circle cx="${width - 140}" cy="${height - 75}" r="24" fill="#F472B6"/>
-      <circle cx="${width - 75}" cy="${height - 140}" r="24" fill="#FDA4AF"/>
+        <!-- Face / Head Oval -->
+        <ellipse cx="540" cy="700" rx="200" ry="240" fill="#F3D1B4"/>
+
+        <!-- Hair Style (Male vs Female) -->
+        ${gender === 'male' ? `
+          <path d="M 330 660 C 330 440, 420 380, 540 380 C 660 380, 750 440, 750 660 C 740 500, 680 430, 540 430 C 400 430, 340 500, 330 660 Z" fill="#292524"/>
+          <!-- Glasses -->
+          <rect x="390" y="640" width="120" height="80" rx="16" fill="none" stroke="#1C1917" stroke-width="12"/>
+          <rect x="570" y="640" width="120" height="80" rx="16" fill="none" stroke="#1C1917" stroke-width="12"/>
+          <line x1="510" y1="675" x2="570" y2="675" stroke="#1C1917" stroke-width="10"/>
+        ` : `
+          <!-- Female Long Hair -->
+          <path d="M 300 780 C 290 500, 380 350, 540 350 C 700 350, 790 500, 780 780 C 820 1000, 800 1250, 760 1400 C 720 1200, 720 800, 710 650 C 680 440, 400 440, 370 650 C 360 800, 360 1200, 320 1400 C 280 1250, 260 1000, 300 780 Z" fill="#1C1917"/>
+          <!-- Glasses -->
+          <rect x="390" y="640" width="120" height="80" rx="20" fill="none" stroke="#D97706" stroke-width="10"/>
+          <rect x="570" y="640" width="120" height="80" rx="20" fill="none" stroke="#D97706" stroke-width="10"/>
+          <line x1="510" y1="675" x2="570" y2="675" stroke="#D97706" stroke-width="8"/>
+        `}
+
+        <!-- Eyes & Smile -->
+        <circle cx="450" cy="680" r="14" fill="#292524"/>
+        <circle cx="630" cy="680" r="14" fill="#292524"/>
+        <path d="M 460 770 Q 540 830, 620 770" fill="none" stroke="#B45309" stroke-width="10" stroke-linecap="round"/>
+
+        <!-- Role Accessory Overlays -->
+        ${accessorySvg}
+      </g>
+
+      <!-- Transparent Photo Framing Inner Guide -->
+      <rect x="40" y="40" width="${width - 80}" height="${height - 80}" rx="48" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="6"/>
     </svg>
   `;
 
-  // Frame 2: Royal Golden Elegance (Baroque Ornate Filigree)
-  const royalGoldSvg = `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="baroqueGold" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#FFF3B0" />
-          <stop offset="25%" stop-color="#FFD700" />
-          <stop offset="60%" stop-color="#D4AF37" />
-          <stop offset="100%" stop-color="#8B6508" />
-        </linearGradient>
-      </defs>
-      
-      <!-- Multi-Layered Royal Gold Frames -->
-      <rect x="24" y="24" width="${width - 48}" height="${height - 48}" rx="54" fill="none" stroke="url(#baroqueGold)" stroke-width="18"/>
-      <rect x="52" y="52" width="${width - 104}" height="${height - 104}" rx="38" fill="none" stroke="#FFE57F" stroke-width="4"/>
-      <rect x="68" y="68" width="${width - 136}" height="${height - 136}" rx="28" fill="none" stroke="url(#baroqueGold)" stroke-width="6"/>
-
-      <!-- Baroque Filigree Corner 1 (Top-Left) -->
-      <path d="M 24 220 C 110 220, 220 110, 220 24 L 24 24 Z" fill="url(#baroqueGold)" opacity="0.95"/>
-      <circle cx="120" cy="120" r="20" fill="#FFFFFF"/>
-      <circle cx="120" cy="120" r="10" fill="#8B6508"/>
-
-      <!-- Baroque Filigree Corner 2 (Top-Right) -->
-      <path d="M ${width - 24} 220 C ${width - 110} 220, ${width - 220} 110, ${width - 220} 24 L ${width - 24} 24 Z" fill="url(#baroqueGold)" opacity="0.95"/>
-      <circle cx="${width - 120}" cy="120" r="20" fill="#FFFFFF"/>
-      <circle cx="${width - 120}" cy="120" r="10" fill="#8B6508"/>
-
-      <!-- Baroque Filigree Corner 3 (Bottom-Left) -->
-      <path d="M 24 ${height - 220} C 110 ${height - 220}, 220 ${height - 110}, 220 ${height - 24} L 24 ${height - 24} Z" fill="url(#baroqueGold)" opacity="0.95"/>
-      <circle cx="120" cy="${height - 120}" r="20" fill="#FFFFFF"/>
-      <circle cx="120" cy="${height - 120}" r="10" fill="#8B6508"/>
-
-      <!-- Baroque Filigree Corner 4 (Bottom-Right) -->
-      <path d="M ${width - 24} ${height - 220} C ${width - 110} ${height - 220}, ${width - 220} ${height - 110}, ${width - 220} ${height - 24} L ${width - 24} ${height - 24} Z" fill="url(#baroqueGold)" opacity="0.95"/>
-      <circle cx="${width - 120}" cy="${height - 120}" r="20" fill="#FFFFFF"/>
-      <circle cx="${width - 120}" cy="${height - 120}" r="10" fill="#8B6508"/>
-    </svg>
+  // Stethoscope for Doctor
+  const doctorAccessory = `
+    <path d="M 400 1040 Q 540 1350, 680 1040" fill="none" stroke="#94A3B8" stroke-width="24" stroke-linecap="round"/>
+    <circle cx="540" cy="1280" r="32" fill="#E2E8F0" stroke="#64748B" stroke-width="8"/>
   `;
 
-  // Frame 3: Pink Blossom Charm (Lush Spring Sakura & Rose)
-  const pinkRoseSvg = `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="sakuraGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#F472B6" />
-          <stop offset="50%" stop-color="#EC4899" />
-          <stop offset="100%" stop-color="#BE185D" />
-        </linearGradient>
-      </defs>
-      
-      <rect x="28" y="28" width="${width - 56}" height="${height - 56}" rx="50" fill="none" stroke="url(#sakuraGrad)" stroke-width="16"/>
-      <rect x="54" y="54" width="${width - 108}" height="${height - 108}" rx="34" fill="none" stroke="#FCE7F3" stroke-width="5"/>
-
-      <!-- Rose Clusters Top-Left -->
-      <circle cx="100" cy="100" r="50" fill="#F472B6"/>
-      <circle cx="130" cy="70" r="32" fill="#FB7185"/>
-      <circle cx="70" cy="130" r="32" fill="#FDA4AF"/>
-      <circle cx="100" cy="100" r="22" fill="#BE185D"/>
-
-      <!-- Rose Clusters Top-Right -->
-      <circle cx="${width - 100}" cy="100" r="50" fill="#F472B6"/>
-      <circle cx="${width - 130}" cy="70" r="32" fill="#FB7185"/>
-      <circle cx="${width - 70}" cy="130" r="32" fill="#FDA4AF"/>
-      <circle cx="${width - 100}" cy="100" r="22" fill="#BE185D"/>
-
-      <!-- Rose Clusters Bottom-Left -->
-      <circle cx="100" cy="${height - 100}" r="50" fill="#F472B6"/>
-      <circle cx="130" cy="${height - 70}" r="32" fill="#FB7185"/>
-      <circle cx="70" cy="${height - 130}" r="32" fill="#FDA4AF"/>
-      <circle cx="100" cy="${height - 100}" r="22" fill="#BE185D"/>
-
-      <!-- Rose Clusters Bottom-Right -->
-      <circle cx="${width - 100}" cy="${height - 100}" r="50" fill="#F472B6"/>
-      <circle cx="${width - 130}" cy="${height - 70}" r="32" fill="#FB7185"/>
-      <circle cx="${width - 70}" cy="${height - 130}" r="32" fill="#FDA4AF"/>
-      <circle cx="${width - 100}" cy="${height - 100}" r="22" fill="#BE185D"/>
-    </svg>
+  // Journal / Book for Professor
+  const professorAccessory = `
+    <rect x="420" y="1300" width="240" height="320" rx="18" fill="#451A03" stroke="#FDE047" stroke-width="8"/>
+    <line x1="440" y1="1330" x2="640" y2="1330" stroke="#FDE047" stroke-width="4"/>
   `;
 
-  // Frame 4: Midnight Navy & Gold Stars
-  const midnightNavySvg = `
-    <svg width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="celestialGold" x1="0%" y1="0%" x2="100%" y2="100%">
-          <stop offset="0%" stop-color="#FEF08A" />
-          <stop offset="40%" stop-color="#EAB308" />
-          <stop offset="100%" stop-color="#854D0E" />
-        </linearGradient>
-      </defs>
-      
-      <rect x="26" y="26" width="${width - 52}" height="${height - 52}" rx="52" fill="none" stroke="#0F172A" stroke-width="20"/>
-      <rect x="56" y="56" width="${width - 112}" height="${height - 112}" rx="36" fill="none" stroke="url(#celestialGold)" stroke-width="8"/>
+  // Tie for Business Professional
+  const businessAccessory = `
+    <polygon points="540,1100 515,1140 565,1140" fill="#0F172A"/>
+    <polygon points="515,1140 565,1140 550,1500 540,1540 530,1500" fill="#0F172A"/>
+  `;
 
-      <!-- 8-Pointed Celestial Gold Stars (Top-Left) -->
-      <polygon points="100,60 112,88 140,88 118,104 126,132 100,114 74,132 82,104 60,88 88,88" fill="url(#celestialGold)"/>
-      <!-- Top-Right -->
-      <polygon points="${width - 100},60 ${width - 88},88 ${width - 60},88 ${width - 82},104 ${width - 74},132 ${width - 100},114 ${width - 126},132 ${width - 118},104 ${width - 140},88 ${width - 112},88" fill="url(#celestialGold)"/>
-      <!-- Bottom-Left -->
-      <polygon points="100,${height - 132} 112,${height - 104} 140,${height - 104} 118,${height - 88} 126,${height - 60} 100,${height - 78} 74,${height - 60} 82,${height - 88} 60,${height - 104} 88,${height - 104}" fill="url(#celestialGold)"/>
-      <!-- Bottom-Right -->
-      <polygon points="${width - 100},${height - 132} ${width - 88},${height - 104} ${width - 60},${height - 104} ${width - 82},${height - 88} ${width - 74},${height - 60} ${width - 100},${height - 78} ${width - 126},${height - 60} ${width - 118},${height - 88} ${width - 140},${height - 104} ${width - 112},${height - 104}" fill="url(#celestialGold)"/>
-    </svg>
+  // Tech Badge for Engineer
+  const engineerAccessory = `
+    <rect x="360" y="1120" width="120" height="180" rx="12" fill="#FFFFFF" stroke="#0284C7" stroke-width="6"/>
+    <line x1="380" y1="1160" x2="460" y2="1160" stroke="#0284C7" stroke-width="8"/>
+    <line x1="380" y1="1200" x2="440" y2="1200" stroke="#94A3B8" stroke-width="6"/>
   `;
 
   const framesData = [
+    // 1. Engineer (Men)
     {
-      id: 'frame-vintage-floral',
-      name: 'Vintage Floral Romance',
-      category: 'Romantic & Floral',
-      description: 'Elegant ivory floral vines and green leaf garland border',
-      svg: floralSvg,
-      bgColor: '#FAF8F5',
-      color: '#2E7D32',
-      promptModifier: 'framed in delicate vintage floral blossoms, warm romantic lighting, soft background glow',
+      id: 'role-engineer-male',
+      name: 'Engineer',
+      category: 'Men',
+      description: 'Professional tech engineer in modern office',
+      svg: createRoleSvg('Engineer', 'male', ['#1E3A8A', '#0F172A', '#2563EB'], ['#E0F2FE', '#BAE6FD'], engineerAccessory),
+      bgColor: '#F0F9FF',
+      color: '#0284C7',
+      promptModifier: 'portrait of a confident Indian male engineer in sleek blue shirt with glasses in tech office',
       order: 1,
     },
+    // 2. Doctor (Men)
     {
-      id: 'frame-royal-gold',
-      name: 'Royal Golden Elegance',
-      category: 'Luxury & Royal',
-      description: 'Shimmering baroque gold filigree border with ornate royal motifs',
-      svg: royalGoldSvg,
-      bgColor: '#FFFDF0',
-      color: '#D4AF37',
-      promptModifier: 'framed in luxurious royal gold filigree, warm golden hour ambient lighting, high celebration majesty',
+      id: 'role-doctor-male',
+      name: 'Doctor',
+      category: 'Men',
+      description: 'Medical healthcare professional with stethoscope',
+      svg: createRoleSvg('Doctor', 'male', ['#F8FAFC', '#E2E8F0', '#0284C7'], ['#F0FDFA', '#CCFBF1'], doctorAccessory),
+      bgColor: '#F0FDFA',
+      color: '#0D9488',
+      promptModifier: 'portrait of a smiling Indian male doctor in white lab coat with stethoscope in modern hospital',
       order: 2,
     },
+    // 3. Professor (Men)
     {
-      id: 'frame-pink-rose',
-      name: 'Pink Blossom Charm',
-      category: 'Anniversary & Birthday',
-      description: 'Sweet pink rose garland and fresh blooming blossoms',
-      svg: pinkRoseSvg,
-      bgColor: '#FFF5F8',
-      color: '#EC4899',
-      promptModifier: 'framed in vibrant blooming pink roses, joyful celebratory festive aura, fairy sparkle lights',
+      id: 'role-professor-male',
+      name: 'Professor',
+      category: 'Men',
+      description: 'Academic professor in formal attire with journal',
+      svg: createRoleSvg('Professor', 'male', ['#1E293B', '#0F172A', '#475569'], ['#FEF3C7', '#FDE68A'], professorAccessory),
+      bgColor: '#FFFBEB',
+      color: '#D97706',
+      promptModifier: 'portrait of a distinguished Indian male university professor holding notebook in classic library',
       order: 3,
     },
+    // 4. Business Professional (Men)
     {
-      id: 'frame-midnight-gold',
-      name: 'Midnight Navy Starry',
-      category: 'Evening Gala & Luxury',
-      description: 'Deep midnight navy blue with brilliant celestial gold star corners',
-      svg: midnightNavySvg,
+      id: 'role-business-male',
+      name: 'Business Professional',
+      category: 'Men',
+      description: 'Corporate business executive in black suit and tie',
+      svg: createRoleSvg('Business', 'male', ['#0F172A', '#020617', '#000000'], ['#F1F5F9', '#E2E8F0'], businessAccessory),
       bgColor: '#F8FAFC',
-      color: '#1E3A8A',
-      promptModifier: 'framed in deep midnight luxury with sparkling starry golden lights, evening gala aesthetics',
+      color: '#0F172A',
+      promptModifier: 'portrait of a handsome Indian male corporate business professional in black suit and tie in executive suite',
       order: 4,
+    },
+    // 5. Engineer (Women)
+    {
+      id: 'role-engineer-female',
+      name: 'Engineer',
+      category: 'Women',
+      description: 'Female tech engineer in modern office',
+      svg: createRoleSvg('Engineer', 'female', ['#1D4ED8', '#1E3A8A', '#3B82F6'], ['#E0F2FE', '#BAE6FD'], engineerAccessory),
+      bgColor: '#F0F9FF',
+      color: '#0284C7',
+      promptModifier: 'portrait of a confident Indian female engineer in sleek blue attire with glasses in modern tech office',
+      order: 5,
+    },
+    // 6. Doctor (Women)
+    {
+      id: 'role-doctor-female',
+      name: 'Doctor',
+      category: 'Women',
+      description: 'Female medical doctor with stethoscope',
+      svg: createRoleSvg('Doctor', 'female', ['#F8FAFC', '#E2E8F0', '#0D9488'], ['#F0FDFA', '#CCFBF1'], doctorAccessory),
+      bgColor: '#F0FDFA',
+      color: '#0D9488',
+      promptModifier: 'portrait of a smiling Indian female doctor in white lab coat with stethoscope in clinic',
+      order: 6,
+    },
+    // 7. Professor (Women)
+    {
+      id: 'role-professor-female',
+      name: 'Professor',
+      category: 'Women',
+      description: 'Female academic professor holding journal',
+      svg: createRoleSvg('Professor', 'female', ['#334155', '#1E293B', '#64748B'], ['#FEF3C7', '#FDE68A'], professorAccessory),
+      bgColor: '#FFFBEB',
+      color: '#D97706',
+      promptModifier: 'portrait of an intelligent Indian female professor holding book in university office',
+      order: 7,
+    },
+    // 8. Business Professional (Women)
+    {
+      id: 'role-business-female',
+      name: 'Business Professional',
+      category: 'Women',
+      description: 'Female corporate executive in suit blazer',
+      svg: createRoleSvg('Business', 'female', ['#0F172A', '#1E293B', '#334155'], ['#F1F5F9', '#E2E8F0'], businessAccessory),
+      bgColor: '#F8FAFC',
+      color: '#0F172A',
+      promptModifier: 'portrait of an elegant Indian female corporate business executive in dark blazer in luxury office',
+      order: 8,
     },
   ];
 
@@ -230,21 +218,14 @@ async function generateFrameAssets() {
     const pngPath = path.join(config.framesDir, `${f.id}.png`);
     const previewPath = path.join(config.framesDir, `${f.id}_preview.png`);
 
-    // 1. Render ultra-crisp transparent overlay PNG
+    // 1. Render overlay PNG
     await sharp(Buffer.from(f.svg))
       .resize(1080, 1920)
       .png({ quality: 100 })
       .toFile(pngPath);
 
-    // 2. Render high-res thumbnail with ivory canvas background
-    const previewSvgWithBg = `
-      <svg width="${width}" height="${height}" xmlns="http://www.w3.org/2000/svg">
-        <rect width="100%" height="100%" fill="${f.bgColor}"/>
-        ${f.svg.replace(/<svg[^>]*>/, '').replace(/<\/svg>/, '')}
-      </svg>
-    `;
-
-    await sharp(Buffer.from(previewSvgWithBg))
+    // 2. Render high-res preview thumbnail
+    await sharp(Buffer.from(f.svg))
       .resize(540, 840)
       .png({ quality: 100 })
       .toFile(previewPath);
@@ -276,7 +257,7 @@ async function generateFrameAssets() {
 async function seedDatabase() {
   console.log('[Seed] Generating ultra-high-definition Holobox frame assets (1080x1920)...');
   const framesToSeed = await generateFrameAssets();
-  console.log(`[Seed] Successfully generated 4 HD frame overlays in ${config.framesDir}`);
+  console.log(`[Seed] Successfully generated 8 HD role swap assets in ${config.framesDir}`);
 
   try {
     await connectDB();

@@ -146,6 +146,15 @@ class FrameModelProxy {
     }
     return null;
   }
+
+  static async deleteMany(filter = {}) {
+    if (this.isMongoConnected()) {
+      return MongooseFrameModel.deleteMany(filter);
+    }
+    loadFallbackFrames();
+    memoryStore.clear();
+    return { acknowledged: true, deletedCount: 0 };
+  }
 }
 
 module.exports = FrameModelProxy;

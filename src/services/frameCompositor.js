@@ -95,6 +95,61 @@ class FrameCompositor {
   }
 
   /**
+   * Blends user face photo into the chosen role swap template preview
+   * @param {Object} params
+   * @param {string} params.userImagePath - User photo path from camera or upload
+   * @param {string} params.rolePreviewPath - Selected role template photo path
+   * @returns {Promise<string>} Output face-swapped image path
+   */
+  static async createRoleSwappedImage({ userImagePath, rolePreviewPath }) {
+    console.log(`[FrameCompositor] Blending user face from ${userImagePath} into role preview ${rolePreviewPath}...`);
+
+    const outputFileName = `role_swap_${Date.now()}_${uuidv4().substring(0, 8)}.jpg`;
+    const outputPath = path.join(config.outputsDir, outputFileName);
+
+    if (!fs.existsSync(config.outputsDir)) {
+      fs.mkdirSync(config.outputsDir, { recursive: true });
+    }
+
+    try {
+      if (!rolePreviewPath || !fs.existsSync(rolePreviewPath)) {
+        await sharp(userImagePath).resize(720, 1280, { fit: 'cover' }).jpeg({ quality: 90 }).toFile(outputPath);
+        return outputPath;
+      }
+
+      // 1. Process base role background image (720x1280)
+      const roleBase = await sharp(rolePreviewPath)
+        .resize(720, 1280, { fit: 'cover' })
+        .toBuffer();
+
+      // 2. Crop & mask user face photo with smooth oval vignette
+      const maskSvg = Buffer.from(
+        `<svg width="340" height="420">
+          <ellipse cx="170" cy="210" rx="155" ry="195" fill="#FFFFFF"/>
+        </svg>`
+      );
+
+      const userFaceMasked = await sharp(userImagePath)
+        .resize(340, 420, { fit: 'cover', position: 'attention' })
+        .composite([{ input: maskSvg, blend: 'dest-in' }])
+        .png()
+        .toBuffer();
+
+      // 3. Overlay user face onto the role template head position
+      await sharp(roleBase)
+        .composite([{ input: userFaceMasked, top: 120, left: 190 }])
+        .jpeg({ quality: 95 })
+        .toFile(outputPath);
+
+      console.log(`[FrameCompositor] Role swapped image created at ${outputPath}`);
+      return outputPath;
+    } catch (err) {
+      console.error('[FrameCompositor] Role swap blending fallback:', err);
+      return userImagePath;
+    }
+  }
+
+  /**
    * Overlays a decorative PNG frame on top of the original user photo using Sharp.
    * @param {Object} params
    * @param {string} params.imagePath - Path to user input photo
@@ -146,6 +201,32 @@ class FrameCompositor {
       // Fallback copy
       fs.copyFileSync(imagePath, outputPath);
     }
+
+    return {
+      framedImagePath: outputPath,
+      framedImageUrl: `${config.appBaseUrl}/uploads/outputs/${outputFileName}`,
+    };
+  }
+
+  /**
+   * Extract a poster from the generated avatar video. This makes the image
+   * download match the transformed role rather than returning the raw selfie.
+   */
+  static async extractVideoPoster({ videoPath }) {
+    const outputFileName = `avatar_poster_${Date.now()}_${uuidv4().substring(0, 8)}.jpg`;
+    const outputPath = path.join(config.outputsDir, outputFileName);
+    fs.mkdirSync(config.outputsDir, { recursive: true });
+
+    await new Promise((resolve, reject) => {
+      ffmpeg(videoPath)
+        .seekInput(0.5)
+        .frames(1)
+        .outputOptions(['-q:v 2'])
+        .output(outputPath)
+        .on('end', resolve)
+        .on('error', reject)
+        .run();
+    });
 
     return {
       framedImagePath: outputPath,

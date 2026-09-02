@@ -83,7 +83,7 @@ VIDEO_PROVIDER=mock
 
 # Set ANY model from your provider:
 # For Fal.ai:
-#   VIDEO_MODEL=fal-ai/kling-video/v1.5/pro/image-to-video
+#   VIDEO_MODEL=fal-ai/wan/v2.2-a14b/image-to-video
 #   VIDEO_MODEL=fal-ai/minimax-video
 # For Replicate:
 #   VIDEO_MODEL=kwaivgi/kling-v1.6-standard
@@ -91,7 +91,7 @@ VIDEO_PROVIDER=mock
 #   VIDEO_MODEL=gen3a_turbo
 # For Luma:
 #   VIDEO_MODEL=ray-2
-VIDEO_MODEL=fal-ai/kling-video/v1.5/pro/image-to-video
+VIDEO_MODEL=fal-ai/wan/v2.2-a14b/image-to-video
 
 # API Keys (Update when using cloud providers)
 FAL_KEY=

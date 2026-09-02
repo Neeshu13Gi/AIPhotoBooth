@@ -14,10 +14,11 @@ const config = {
 
   // Video Provider Config
   videoProvider: (process.env.VIDEO_PROVIDER || 'mock').toLowerCase().trim(),
-  videoModel: process.env.VIDEO_MODEL || 'fal-ai/kling-video/v1.5/pro/image-to-video',
+  videoModel: process.env.VIDEO_MODEL || 'Wan-AI/Wan2.2-I2V-A14B',
 
   // Provider Keys
   falKey: process.env.FAL_KEY || '',
+  hfToken: process.env.HF_TOKEN || '',
   replicateApiToken: process.env.REPLICATE_API_TOKEN || '',
   runwayApiSecret: process.env.RUNWAY_API_SECRET || '',
   klingAccessKey: process.env.KLING_ACCESS_KEY || '',
